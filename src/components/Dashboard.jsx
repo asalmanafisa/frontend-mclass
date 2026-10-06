@@ -59,7 +59,7 @@ const classes = [
     present: 9,
     absent: 1,
     percent: 90,
-    note: null,
+    note: "1 belum hadir",
   },
   {
     kelasId: "9",

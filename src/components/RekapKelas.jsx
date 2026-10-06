@@ -381,7 +381,7 @@ export default function RekapKelas() {
                 </thead>
                 <tbody className="divide-y divide-gray-100 text-xs">
                   {[
-                    { id: "Kelas 7", status: "Perlu Cek" },
+                    { id: "Kelas 7", status: "Normal" },
                     { id: "Kelas 8", status: "Perlu Cek" },
                     { id: "Kelas 9", status: "Perlu Cek" },
                   ].map((row, i) => {
