@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Sidebar from "./dashboard/Sidebar";
 import Topbar from "./dashboard/Topbar";
+import ModalGantiFoto from "./ModalGantiFoto";
+import ModalHapusFoto from "./ModalHapusFoto";
 
 // ============ DATA ============
 const aktivitasLog = [
@@ -112,6 +114,11 @@ export default function Pengaturan() {
 
   const [isSaving, setIsSaving] = useState(false);
 
+  const [showFotoModal, setShowFotoModal] = useState(false);
+
+  const [showHapusModal, setShowHapusModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleSave = () => {
     setIsSaving(true);
     setTimeout(() => {
@@ -119,6 +126,15 @@ export default function Pengaturan() {
       alert("Perubahan berhasil disimpan!");
     }, 800);
   };
+
+const handleHapusFoto = () => {
+  setIsDeleting(true);
+  setTimeout(() => {
+    setIsDeleting(false);
+    setShowHapusModal(false);
+    alert("Foto profil berhasil dihapus. Avatar default telah diterapkan.");
+  }, 800);
+};
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
@@ -193,64 +209,30 @@ export default function Pengaturan() {
                 </p>
 
                 <div className="mt-4 flex items-center justify-center gap-2">
-                  <button className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-[10px] font-semibold text-gray-700 hover:bg-gray-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                    </svg>
-                    Ganti Foto
-                  </button>
+                  <button
+        onClick={() => setShowFotoModal(true)}
+        className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-[10px] font-semibold text-gray-700 hover:bg-gray-50"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+        </svg>
+        Ganti Foto
+      </button>
                   <span className="text-[9px] text-gray-400">atau</span>
-                  <button className="text-[10px] font-semibold text-red-500 hover:underline">
-                    Hapus
-                  </button>
+                 <button
+        onClick={() => setShowHapusModal(true)}
+        className="text-[10px] font-semibold text-red-500 hover:underline"
+      >
+     Hapus
+      </button>
                 </div>
                 <p className="mt-2 text-[9px] text-gray-400">
                   Format JPG, PNG maksimal 5MB. Disarankan 500x500.
                 </p>
               </div>
 
-              {/* ==== STATUS PENUGASAN ==== */}
-              <div className="rounded-xl border border-gray-200 bg-white p-5">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-gray-900">
-                    Status Penugasan
-                  </h4>
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-700">
-                    2025/2026
-                  </span>
-                </div>
-
-                <p className="mt-3 text-[10px] text-gray-500">
-                  Unit Madrasah:{" "}
-                  <strong className="text-gray-800">
-                    MTs Al-Ma'arif O2 Singosari
-                  </strong>
-                </p>
-
-                <div className="mt-3 space-y-2 text-[10px]">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <span className="text-gray-500">Jadwal Piket</span>
-                    <span className="font-semibold text-gray-800">
-                      Senin - Sabtu
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <span className="text-gray-500">Wali Kelas</span>
-                    <span className="font-semibold text-gray-800">
-                      Kelas 9A (Taufik)
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500">Status Kependidikan</span>
-                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-700">
-                      PNS Kemenag Aktif
-                    </span>
-                  </div>
-                </div>
-              </div>
-
               {/* ==== LOG SESI TERAKHIR ==== */}
-              <div className="rounded-xl border border-gray-200 bg-white p-5">
+              <div className="rounded-xl border border-gray-200 bg-white p-6">
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-bold text-gray-900">
                     Log Sesi Terakhir
@@ -320,13 +302,10 @@ export default function Pengaturan() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <h3 className="text-base font-bold text-gray-900">
-                      Data Diri & Kedinasan Admin
+                      Data Diri
                     </h3>
                     <span className="text-red-500">*</span>
                   </div>
-                  <span className="rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-[10px] font-mono text-gray-600">
-                    ID Petugas: AGR-009
-                  </span>
                 </div>
                 <p className="mt-0.5 text-[10px] text-gray-500">
                   Informasi identitas petugas pendidik dan tenaga kependidikan madrasah.
@@ -464,91 +443,7 @@ export default function Pengaturan() {
                 </div>
               </div>
 
-              {/* ==== PREFERENSI NOTIFIKASI ==== */}
-              <div className="rounded-xl border border-gray-200 bg-white p-5">
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-700">{icons.bell}</span>
-                  <h3 className="text-base font-bold text-gray-900">
-                    Preferensi Notifikasi & Laporan Sistem
-                  </h3>
-                </div>
-                <p className="mt-0.5 text-[10px] text-gray-500">
-                  Atur bagaimana Anda menerima pemberitahuan sistem dan laporan harian siswa.
-                </p>
-
-                <div className="mt-4 space-y-3">
-                  {/* Notif WhatsApp */}
-                  <div className="flex items-start justify-between gap-3 rounded-lg border border-gray-100 bg-gray-50/50 p-3">
-                    <div className="flex items-start gap-2.5">
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                        </svg>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold text-gray-900">
-                          Kirim Rekapitulasi Presensi Harian via Email & WhatsApp
-                        </p>
-                        <p className="mt-0.5 text-[10px] text-gray-500">
-                          Menerima laporan PDF kehadiran siswa setiap hari pukul 14:00 WIB.
-                        </p>
-                      </div>
-                    </div>
-                    <Toggle
-                      checked={preferences.notifWhatsapp}
-                      onChange={(v) => setPreferences({ ...preferences, notifWhatsapp: v })}
-                    />
-                  </div>
-
-                  {/* Notif Geolokasi */}
-                  <div className="flex items-start justify-between gap-3 rounded-lg border border-gray-100 bg-gray-50/50 p-3">
-                    <div className="flex items-start gap-2.5">
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                          <circle cx="12" cy="10" r="3" />
-                        </svg>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold text-gray-900">
-                          Peringatan Siswa di Luar Radius Geofence (Akurasi GPS 50m)
-                        </p>
-                        <p className="mt-0.5 text-[10px] text-gray-500">
-                          Notifikasi langsung ketika ada siswa yang melakukan presensi di luar batas radius madrasah.
-                        </p>
-                      </div>
-                    </div>
-                    <Toggle
-                      checked={preferences.notifGeolokasi}
-                      onChange={(v) => setPreferences({ ...preferences, notifGeolokasi: v })}
-                    />
-                  </div>
-
-                  {/* Notif Video */}
-                  <div className="flex items-start justify-between gap-3 rounded-lg border border-gray-100 bg-gray-50/50 p-3">
-                    <div className="flex items-start gap-2.5">
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="m22 8-6 4 6 4V8Z" />
-                          <rect width="14" height="12" x="2" y="6" rx="2" ry="2" />
-                        </svg>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold text-gray-900">
-                          Tinjauan Antrean Verifikasi Foto Wajah Baru (Biometrik AI)
-                        </p>
-                        <p className="mt-0.5 text-[10px] text-gray-500">
-                          Pemberitahuan ketika verifikasi wajah siswa membutuhkan konfirmasi ulang oleh admin.
-                        </p>
-                      </div>
-                    </div>
-                    <Toggle
-                      checked={preferences.notifVideo}
-                      onChange={(v) => setPreferences({ ...preferences, notifVideo: v })}
-                    />
-                  </div>
-                </div>
-              </div>
+              
 
               {/* ==== ACTION BAR ==== */}
               <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4">
@@ -588,18 +483,31 @@ export default function Pengaturan() {
             </div>
           </div>
 
+{/* ⬇️ MODAL TARUH DI SINI ⬇️ */}
+  <ModalGantiFoto
+    isOpen={showFotoModal}
+    onClose={() => setShowFotoModal(false)}
+    user={profile}
+  />
+
+  {/* MODAL HAPUS FOTO */}
+<ModalHapusFoto
+  isOpen={showHapusModal}
+  onClose={() => setShowHapusModal(false)}
+  onConfirm={handleHapusFoto}
+  user={{
+    nama: profile.nama,
+    idPetugas: "AGM-089",
+    unit: "MTs Al-Ma'arif",
+    avatarSeed: "AF",
+  }}
+  isDeleting={isDeleting}
+/>
+
           {/* Footer */}
-          <footer className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4 text-[10px] text-gray-400">
-            <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
-            <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-gray-600">Bantuan Teknis</a>
-              <a href="#" className="hover:text-gray-600">Kebijakan Privasi</a>
-              <div className="flex items-center gap-1.5 text-emerald-600">
-                <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                <span className="font-medium">Server Terhubung</span>
-              </div>
-            </div>
-          </footer>
+          <footer className="mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
+        <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
+      </footer>
         </main>
       </div>
     </div>

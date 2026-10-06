@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const days = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
 
 // Contoh: Oktober 2026 mulai hari Kamis (index 3)
@@ -23,9 +25,7 @@ export default function CalendarWidget() {
               <path d="m15 18-6-6 6-6" />
             </svg>
           </button>
-          <span className="text-xs font-semibold text-gray-700">
-            Okt 2026
-          </span>
+          <span className="text-xs font-semibold text-gray-700">Okt 2026</span>
           <button className="rounded p-1 text-gray-400 hover:bg-gray-100">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="m9 18 6-6-6-6" />
@@ -92,13 +92,13 @@ export default function CalendarWidget() {
         </div>
       </div>
 
-      {/* CTA */}
-      <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2.5 text-xs font-bold text-gray-700 transition hover:bg-gray-50">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-        </svg>
-        Lihat Jadwal Penuh & KBM Lengkap
-      </button>
+      {/* ⬇️ Tombol Link ke /kalender */}
+      <Link
+        to="/kalender"
+        className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2.5 text-xs font-bold text-gray-700 transition hover:bg-gray-50"
+      >
+        Lihat Jadwal Penuh 
+      </Link>
     </div>
   );
 }

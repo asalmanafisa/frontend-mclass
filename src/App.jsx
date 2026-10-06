@@ -9,6 +9,9 @@ import SemuaKelas from "./components/SemuaKelas";
 import RekapKelas from "./components/RekapKelas";
 import KalenderAgenda from "./components/KalenderAgenda";
 import Pengaturan from "./components/Pengaturan";
+import DetailKelas from "./components/DetailKelas";
+import DetailLokasi from "./components/DetailLokasi";
+import ValidasiWajah from "./components/ValidasiWajah";
 
 function AuthLayout({ children }) {
   return (
@@ -36,9 +39,12 @@ export default function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/rekap-kelas" element={<RekapKelas />} />
+        <Route path="/detail-kelas/:kelas" element={<DetailKelas />} />
+        <Route path="/detail-lokasi" element={<DetailLokasi />} />
         <Route path="/semua-kelas" element={<SemuaKelas />} /> {/* path tetap /all-classes biar link lama tetap jalan */}
         <Route path="/kalender" element={<KalenderAgenda />} />
         <Route path="/pengaturan" element={<Pengaturan />} />
+        <Route path="/validasi-wajah/:nis" element={<ValidasiWajah />} />
       </Routes>
     </BrowserRouter>
   );

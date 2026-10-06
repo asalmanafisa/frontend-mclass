@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import Sidebar from "./dashboard/Sidebar";
 import Topbar from "./dashboard/Topbar";
+import { exportMultiSheetExcel } from "../utils/exportExcel";
+import { getSiswaByKelas } from "../data/siswa";
 
 // ============ DATA ============
 const statsData = [
   {
     label: "Monitoring Kelas",
-    value: "9",
+    value: "3",
     sub: "Kelas",
     desc: "Pemantauan Real-time",
     borderColor: "border-emerald-500",
@@ -15,7 +17,7 @@ const statsData = [
   },
   {
     label: "Kehadiran Rata-rata",
-    value: "94,1%",
+    value: "90%",
     sub: "",
     desc: "Naik +2,4% dari bulan lalu",
     borderColor: "border-blue-500",
@@ -24,16 +26,16 @@ const statsData = [
   },
   {
     label: "Total Izin / Sakit",
-    value: "12",
+    value: "2",
     sub: "Siswa",
-    desc: "Perlu Verifikasi: 3 Akun",
+    desc: "Perlu Verifikasi: 1 Akun",
     borderColor: "border-emerald-500",
     bgIcon: "bg-emerald-50 text-emerald-600",
     icon: "doc",
   },
   {
     label: "Alpa & Pelanggaran",
-    value: "4",
+    value: "3",
     sub: "Siswa",
     desc: "Tindak Lanjut: 2 Siswa",
     borderColor: "border-red-500",
@@ -43,22 +45,16 @@ const statsData = [
 ];
 
 const classes = [
-  { id: "7A", total: 30, present: 30, izin: 0, telat: 0, alpa: 0, percent: 100, status: "normal" },
-  { id: "7B", total: 30, present: 28, izin: 1, telat: 0, alpa: 1, percent: 93.3, status: "warning" },
-  { id: "7C", total: 30, present: 30, izin: 0, telat: 0, alpa: 0, percent: 100, status: "normal" },
-  { id: "8A", total: 32, present: 30, izin: 1, telat: 0, alpa: 1, percent: 93.8, status: "warning" },
-  { id: "8B", total: 30, present: 28, izin: 0, telat: 1, alpa: 1, percent: 93.3, status: "warning" },
-  { id: "8C", total: 28, present: 26, izin: 1, telat: 0, alpa: 1, percent: 92.9, status: "warning" },
-  { id: "9A", total: 32, present: 32, izin: 0, telat: 0, alpa: 0, percent: 100, status: "normal" },
-  { id: "9B", total: 30, present: 28, izin: 1, telat: 1, alpa: 0, percent: 93.3, status: "warning" },
-  { id: "9C", total: 28, present: 22, izin: 1, telat: 1, alpa: 4, percent: 78.6, status: "danger" },
+  { id: "Kelas 7", total: 10, present: 10, izin: 0, telat: 0, alpa: 0, percent: 100, status: "normal" },
+  { id: "Kelas 8", total: 10, present: 9, izin: 0, telat: 0, alpa: 1, percent: 90, status: "warning" },
+  { id: "Kelas 9", total: 10, present: 8, izin: 0, telat: 0, alpa: 2, percent: 80, status: "warning" },
 ];
 
 const violations = [
   {
     name: "Muhammad Rizky Pratama",
     detail: "Terlambat 3x",
-    kelas: "8B",
+    kelas: "8",
     date: "20 Nov 2026",
     status: "SP1",
     statusColor: "bg-red-100 text-red-700",
@@ -66,7 +62,7 @@ const violations = [
   {
     name: "Rizqi Fadli Ananda",
     detail: "Alpa 2x",
-    kelas: "9C",
+    kelas: "9",
     date: "19 Nov 2026",
     status: "Tindak Lanjut",
     statusColor: "bg-amber-100 text-amber-700",
@@ -106,22 +102,12 @@ function StatCard({ item }) {
     <div className={`rounded-xl border-l-4 border border-gray-200 bg-white p-4 ${item.borderColor}`}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-bold tracking-wide text-gray-600">
-            {item.label}
-          </p>
+          <p className="text-xs font-bold tracking-wide text-gray-600">{item.label}</p>
           <div className="mt-2 flex items-baseline gap-1.5">
-            <span className="text-3xl font-extrabold text-gray-900">
-              {item.value}
-            </span>
-            {item.sub && (
-              <span className="text-xs font-semibold text-gray-500">
-                {item.sub}
-              </span>
-            )}
+            <span className="text-3xl font-extrabold text-gray-900">{item.value}</span>
+            {item.sub && <span className="text-xs font-semibold text-gray-500">{item.sub}</span>}
           </div>
-          <p className={`mt-1 text-xs font-medium ${
-            item.icon === "warning" ? "text-red-600" : "text-gray-500"
-          }`}>
+          <p className={`mt-1 text-xs font-medium ${item.icon === "warning" ? "text-red-600" : "text-gray-500"}`}>
             {item.desc}
           </p>
         </div>
@@ -134,56 +120,133 @@ function StatCard({ item }) {
 }
 
 function ClassCompactCard({ c }) {
-  const isWarning = c.percent < 95 && c.percent >= 85;
-  const isDanger = c.percent < 85;
+  const isWarning = c.status === "warning";
+  const isDanger = c.status === "danger";
 
   return (
-    <div
-      className={`rounded-xl border bg-white p-3 ${
-        isDanger
-          ? "border-red-200"
-          : isWarning
-          ? "border-amber-200"
-          : "border-gray-200"
-      }`}
-    >
+    <div className={`rounded-xl border bg-white p-4 ${isDanger ? "border-red-200" : isWarning ? "border-amber-200" : "border-gray-200"}`}>
       <div className="flex items-center justify-between">
-        <span className="text-sm font-bold text-gray-900">{c.id}</span>
-        <span
-          className={`h-2 w-2 rounded-full ${
-            isDanger ? "bg-red-500" : isWarning ? "bg-amber-500" : "bg-emerald-500"
-          }`}
-        ></span>
+        <span className="text-base font-bold text-gray-900">{c.id}</span>
+        <span className={`h-2.5 w-2.5 rounded-full ${isDanger ? "bg-red-500" : isWarning ? "bg-amber-500" : "bg-emerald-500"}`}></span>
       </div>
-      <p className="mt-1 text-[10px] text-gray-500">Hadir: {c.present}/{c.total} Siswa</p>
+      <p className="mt-1 text-[11px] text-gray-500">
+        Hadir: {c.present}/{c.total} Siswa
+      </p>
 
-      {/* Progress */}
-      <div className="mt-2 flex items-center justify-between text-[10px] text-gray-500">
+      <div className="mt-3 flex items-center justify-between text-[11px] text-gray-500">
         <span>{c.percent}% Hadir</span>
         <span>{c.alpa} Alpa</span>
       </div>
-      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+      <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-gray-100">
         <div
-          className={`h-full rounded-full ${
-            isDanger ? "bg-red-500" : isWarning ? "bg-amber-500" : "bg-emerald-500"
-          }`}
+          className={`h-full rounded-full ${isDanger ? "bg-red-500" : isWarning ? "bg-amber-500" : "bg-emerald-500"}`}
           style={{ width: `${c.percent}%` }}
         ></div>
       </div>
 
-      <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-2">
-        <span className="text-[10px] text-gray-400">
-          {c.percent}% Hadir
-        </span>
-        <button className="text-[10px] font-semibold text-emerald-700 hover:underline">
+      <div className="mt-3 grid grid-cols-3 gap-1.5 text-center">
+        <div className="rounded-md bg-gray-50 py-1.5">
+          <p className="text-[10px] text-gray-500">Izin</p>
+          <p className="text-sm font-bold text-gray-800">{c.izin}</p>
+        </div>
+        <div className="rounded-md bg-gray-50 py-1.5">
+          <p className="text-[10px] text-gray-500">Telat</p>
+          <p className="text-sm font-bold text-gray-800">{c.telat}</p>
+        </div>
+        <div className="rounded-md bg-gray-50 py-1.5">
+          <p className="text-[10px] text-gray-500">Alpa</p>
+          <p className={`text-sm font-bold ${c.alpa > 0 ? "text-red-600" : "text-gray-800"}`}>{c.alpa}</p>
+        </div>
+      </div>
+
+      <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+        <span className="text-[10px] text-gray-400">{c.percent}% Hadir</span>
+        <Link
+          to={`/detail-kelas/${c.id.replace("Kelas ", "")}`}
+          className="text-[10px] font-semibold text-emerald-700 hover:underline"
+        >
           Lihat Detail →
-        </button>
+        </Link>
       </div>
     </div>
   );
 }
 
 // ============ MAIN ============
+const handleExport = () => {
+  const sheets = classes.map((c) => {
+    const kelasNum = c.id.replace("Kelas ", ""); // "7" | "8" | "9"
+    const siswaKelasIni = getSiswaByKelas(kelasNum);
+
+    // Data siswa dengan nama asli
+    const detailSiswa = siswaKelasIni.map((s, i) => {
+      const isAlfa = i >= c.present; // siswa ke-N+1 dst = alfa
+      return {
+        No: i + 1,
+        NIS: s.nis,
+        "Nama Siswa": s.nama, // ⬅️ NAMA ASLI
+        Status: isAlfa ? "Alfa" : "Hadir",
+        "Waktu Presensi": isAlfa
+          ? "—"
+          : `06:${String(40 + (i % 20)).padStart(2, "0")} WIB`,
+        Keterangan: isAlfa ? "Tanpa Keterangan" : "Tepat Waktu",
+      };
+    });
+
+    // Baris kosong pemisah
+    detailSiswa.push({});
+
+    // Baris ringkasan
+    detailSiswa.push({
+      No: "RINGKASAN",
+      NIS: "",
+      "Nama Siswa": "",
+      Status: "",
+      "Waktu Presensi": "",
+      Keterangan: "",
+    });
+    detailSiswa.push({
+      No: "Total Siswa",
+      NIS: "",
+      "Nama Siswa": String(c.total),
+      Status: "",
+      "Waktu Presensi": "",
+      Keterangan: "",
+    });
+    detailSiswa.push({
+      No: "Total Hadir",
+      NIS: "",
+      "Nama Siswa": String(c.present),
+      Status: "",
+      "Waktu Presensi": "",
+      Keterangan: "",
+    });
+    detailSiswa.push({
+      No: "Total Alpa",
+      NIS: "",
+      "Nama Siswa": String(c.alpa),
+      Status: "",
+      "Waktu Presensi": "",
+      Keterangan: "",
+    });
+    detailSiswa.push({
+      No: "Persentase Hadir",
+      NIS: "",
+      "Nama Siswa": `${c.percent}%`,
+      Status: "",
+      "Waktu Presensi": "",
+      Keterangan: "",
+    });
+
+    return {
+      name: c.id, // "Kelas 7", "Kelas 8", "Kelas 9"
+      data: detailSiswa,
+    };
+  });
+
+  exportMultiSheetExcel(sheets, "Rekap-Presensi-Kelas");
+};
+
 export default function RekapKelas() {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
@@ -193,7 +256,7 @@ export default function RekapKelas() {
         <Topbar />
 
         <main className="flex-1 overflow-y-auto p-6">
-          {/* ============ HEADER ============ */}
+          {/* HEADER */}
           <div className="mb-5 flex items-start justify-between">
             <div>
               <h2 className="text-xl font-extrabold text-gray-900">
@@ -204,17 +267,13 @@ export default function RekapKelas() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <button className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
-                Segarkan
-              </button>
               <button className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect width="18" height="18" x="3" y="4" rx="2" />
-                  <path d="M16 2v4M8 2v4M3 10h18" />
-                </svg>
                 Periode: 1-30 Nov 2026
               </button>
-              <button className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-800">
+              <button
+                onClick={handleExport}
+                className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-800"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
                 </svg>
@@ -223,112 +282,40 @@ export default function RekapKelas() {
             </div>
           </div>
 
-          {/* ============ 4 STAT CARDS ============ */}
+          {/* 4 STAT CARDS */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             {statsData.map((s, i) => (
               <StatCard key={i} item={s} />
             ))}
           </div>
 
-          {/* ============ DETAIL MONITORING 9 KELAS ============ */}
+          {/* MONITORING KELAS */}
           <section className="mt-6">
             <div className="mb-3 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-gray-900">
-                  Detail Monitoring 9 Kelas Real-Time
-                </h3>
-                <p className="mt-0.5 text-xs text-gray-500">
-                  Pantau kehadiran setiap kelas dalam satu tampilan. Data diperbarui otomatis setiap 30 detik.
-                </p>
+                <h3 className="text-base font-bold text-gray-900">Detail Monitoring per Tingkat Kelas</h3>
+                <p className="mt-0.5 text-xs text-gray-500">Pantau kehadiran setiap kelas dalam satu tampilan.</p>
               </div>
-              <Link
-            to="/semua-kelas"
-             className="text-xs font-semibold text-emerald-700 hover:underline"
-            >
-             Lihat Semua 9 Kelas →
-            </Link>
             </div>
-
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
-              {classes.slice(0, 5).map((c) => (
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+              {classes.map((c) => (
                 <ClassCompactCard key={c.id} c={c} />
               ))}
             </div>
           </section>
 
-          {/* ============ 2-COLUMN: VIOLATIONS + GPS ============ */}
-          <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {/* === Pelanggaran === */}
+          <section className="mt-6">
             <div className="rounded-xl border border-gray-200 bg-white p-5">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">
-                    Aktivitas Pelanggaran & Disiplin
-                  </h3>
-                  <p className="mt-0.5 text-xs text-gray-500">
-                    Daftar pelanggaran siswa yang tercatat oleh sistem.
-                  </p>
-                </div>
-                <button className="rounded-lg border border-gray-200 px-2.5 py-1 text-[10px] font-semibold text-gray-600 hover:bg-gray-50">
-                  Segarkan
-                </button>
-              </div>
-
-              <div className="mt-4 space-y-2">
-                {violations.map((v, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50/50 p-3"
-                  >
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white">
-                      {v.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-xs font-bold text-gray-900">
-                        {v.name}
-                      </p>
-                      <p className="truncate text-[10px] text-gray-500">
-                        {v.detail} • Kelas {v.kelas}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${v.statusColor}`}>
-                        {v.status}
-                      </span>
-                      <p className="mt-0.5 text-[10px] text-gray-400">
-                        {v.date}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-3 border-t border-gray-100 pt-3">
-                <p className="text-[10px] text-gray-500">
-                  Total: <strong className="text-gray-800">6 catatan pelanggaran</strong> •{" "}
-                  <strong className="text-red-600">1</strong> menunggu tindak lanjut
-                </p>
-              </div>
-            </div>
-
-            {/* === Coverage GPS === */}
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-base font-bold text-gray-900">
-                    Cakupan & Radius GPS Presensi
-                  </h3>
-                  <p className="mt-0.5 text-xs text-gray-500">
-                    Pemantauan titik lokasi presensi siswa & petugas.
-                  </p>
+                  <h3 className="text-base font-bold text-gray-900">Cakupan & Radius GPS Presensi</h3>
+                  <p className="mt-0.5 text-xs text-gray-500">Pemantauan titik lokasi presensi siswa & petugas.</p>
                 </div>
                 <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
                   GPS Aktif
                 </span>
               </div>
-
-              {/* Radar visual */}
               <div className="mt-5 flex items-center justify-center">
                 <div className="relative flex h-40 w-40 items-center justify-center">
                   <div className="absolute inset-0 rounded-full border-2 border-dashed border-emerald-200"></div>
@@ -344,103 +331,37 @@ export default function RekapKelas() {
                   <span className="absolute -left-2 bottom-10 flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
                 </div>
               </div>
-
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-center">
-                  <p className="text-2xl font-extrabold text-gray-900">306</p>
+                  <p className="text-2xl font-extrabold text-gray-900">90</p>
                   <p className="text-[10px] text-gray-500">Siswa Terpantau</p>
                 </div>
                 <div className="rounded-lg border border-red-100 bg-red-50 p-3 text-center">
-                  <p className="text-2xl font-extrabold text-red-600">2</p>
+                  <p className="text-2xl font-extrabold text-red-600">3</p>
                   <p className="text-[10px] text-red-600">Siswa Di Luar Radius</p>
                 </div>
               </div>
-
-              <button className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-gray-200 py-2 text-[10px] font-semibold text-gray-700 hover:bg-gray-50">
+              <Link
+                to="/detail-lokasi"
+                className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-gray-200 py-2 text-[10px] font-semibold text-gray-700 hover:bg-gray-50"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="m9 18 6-6-6-6" />
                 </svg>
                 Lihat Detail Titik Lokasi
-              </button>
+              </Link>
             </div>
           </section>
 
-          {/* ============ PANEL EKSPOR ============ */}
-          <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5">
-            <div className="mb-4">
-              <h3 className="text-base font-bold text-gray-900">
-                Panel Ekspor Dokumen & Laporan Presensi
-              </h3>
-              <p className="mt-0.5 text-xs text-gray-500">
-                Unduh rekap harian, mingguan, bulanan, atau per siswa dalam format PDF & Excel.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {/* Export Bulanan */}
-              <div className="flex items-center gap-4 rounded-lg border border-gray-200 bg-gray-50/50 p-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
-                  </svg>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-gray-900">
-                    Rekap Bulanan Format PDF
-                  </p>
-                  <p className="mt-0.5 text-[10px] text-gray-500">
-                    Laporan lengkap dengan jumlah hadir, izin, sakit, alpa, dan grafik kehadiran.
-                  </p>
-                  <button className="mt-2 flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3 py-1.5 text-[10px] font-bold text-white hover:bg-emerald-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                    </svg>
-                    Unduh Laporan PDF
-                  </button>
-                </div>
-              </div>
-
-              {/* Export Excel */}
-              <div className="flex items-center gap-4 rounded-lg border border-gray-200 bg-gray-50/50 p-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect width="18" height="18" x="3" y="3" rx="2" />
-                    <path d="M3 9h18M9 21V9" />
-                  </svg>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-gray-900">
-                    Rekap Detail Excel (.xlsx)
-                  </p>
-                  <p className="mt-0.5 text-[10px] text-gray-500">
-                    Data mentah presensi untuk analisis lanjutan atau integrasi sistem lain.
-                  </p>
-                  <button className="mt-2 flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[10px] font-bold text-gray-700 hover:bg-gray-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                    </svg>
-                    Unduh Rekap Excel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* ============ TABEL REKAP PER KELAS ============ */}
+          {/* TABEL REKAP */}
           <section className="mt-6 rounded-xl border border-gray-200 bg-white">
             <div className="flex items-center justify-between border-b border-gray-100 p-5">
               <div>
-                <h3 className="text-base font-bold text-gray-900">
-                  Ringkasan Presensi per Kelas Hari Ini
-                </h3>
+                <h3 className="text-base font-bold text-gray-900">Ringkasan Presensi per Kelas Hari Ini</h3>
                 <p className="mt-0.5 text-xs text-gray-500">
                   Data diperbarui secara real-time. Terakhir diperbarui 07:30 WIB.
                 </p>
               </div>
-              <button className="rounded-lg border border-gray-200 px-3 py-1.5 text-[10px] font-semibold text-gray-600 hover:bg-gray-50">
-                Tabel Ringkasan
-              </button>
             </div>
 
             <div className="overflow-x-auto">
@@ -448,7 +369,6 @@ export default function RekapKelas() {
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/50 text-[10px] font-bold uppercase tracking-wider text-gray-500">
                     <th className="px-4 py-3 text-left">Kelas</th>
-                    <th className="px-4 py-3 text-left">Wali Kelas</th>
                     <th className="px-4 py-3 text-center">Total</th>
                     <th className="px-4 py-3 text-center">Hadir</th>
                     <th className="px-4 py-3 text-center">Izin</th>
@@ -461,15 +381,9 @@ export default function RekapKelas() {
                 </thead>
                 <tbody className="divide-y divide-gray-100 text-xs">
                   {[
-                    { id: "7A", wali: "Ahmad Fauzi, S.Pd.", status: "Normal" },
-                    { id: "7B", wali: "Siti Aminah, S.Pd.I.", status: "Perlu Cek" },
-                    { id: "7C", wali: "Rizki Ramadhan, S.Pd.", status: "Normal" },
-                    { id: "8A", wali: "Dewi Kartika, S.Pd.", status: "Perlu Cek" },
-                    { id: "8B", wali: "Hasan Basri, M.Pd.", status: "Perlu Cek" },
-                    { id: "8C", wali: "Nur Hidayah, S.Pd.", status: "Perlu Cek" },
-                    { id: "9A", wali: "Ust. H. Fauzi", status: "Normal" },
-                    { id: "9B", wali: "Aisyah Rahma, S.Pd.", status: "Perlu Cek" },
-                    { id: "9C", wali: "Zainal Abidin, S.Ag.", status: "Tindak Lanjut" },
+                    { id: "Kelas 7", status: "Perlu Cek" },
+                    { id: "Kelas 8", status: "Perlu Cek" },
+                    { id: "Kelas 9", status: "Perlu Cek" },
                   ].map((row, i) => {
                     const c = classes.find((cl) => cl.id === row.id);
                     const statusColor =
@@ -481,7 +395,6 @@ export default function RekapKelas() {
                     return (
                       <tr key={i} className="hover:bg-gray-50/50">
                         <td className="px-4 py-3 font-bold text-gray-900">{c.id}</td>
-                        <td className="px-4 py-3 text-gray-700">{row.wali}</td>
                         <td className="px-4 py-3 text-center text-gray-700">{c.total}</td>
                         <td className="px-4 py-3 text-center font-semibold text-emerald-700">{c.present}</td>
                         <td className="px-4 py-3 text-center text-gray-700">{c.izin}</td>
@@ -496,9 +409,12 @@ export default function RekapKelas() {
                           </span>
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <button className="text-[10px] font-semibold text-emerald-700 hover:underline">
+                          <Link
+                            to={`/detail-kelas/${c.id.replace("Kelas ", "")}`}
+                            className="text-[10px] font-semibold text-emerald-700 hover:underline"
+                          >
                             Lihat Detail →
-                          </button>
+                          </Link>
                         </td>
                       </tr>
                     );
@@ -508,18 +424,9 @@ export default function RekapKelas() {
             </div>
           </section>
 
-          {/* Footer */}
-          <footer className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4 text-[10px] text-gray-400">
-            <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
-            <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-gray-600">Bantuan Teknis</a>
-              <a href="#" className="hover:text-gray-600">Kebijakan Privasi</a>
-              <div className="flex items-center gap-1.5 text-emerald-600">
-                <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                <span className="font-medium">Server Terhubung</span>
-              </div>
-            </div>
-          </footer>
+          <footer className="mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
+        <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
+      </footer>
         </main>
       </div>
     </div>

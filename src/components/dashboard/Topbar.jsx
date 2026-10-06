@@ -24,21 +24,7 @@ export default function Topbar() {
 
       {/* Kanan: Status & Buttons */}
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1.5 rounded-full border border-emerald-500 bg-emerald-50 px-3 py-1.5">
-          <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-          <span className="text-xs font-semibold text-emerald-700">
-            Sistem Presensi Aktif
-          </span>
-        </div>
-
-        <button className="flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 6v6l4 2" />
-          </svg>
-          Sabtu, 07:30 WIB • Sesi Pagi
-        </button>
-
+      
 
 
 

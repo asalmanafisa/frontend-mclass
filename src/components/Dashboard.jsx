@@ -10,7 +10,7 @@ import CalendarWidget from "./dashboard/CalendarWidget";
 const stats = [
   {
     label: "TOTAL SISWA",
-    value: "270",
+    value: "30",
     unit: "Siswa",
     subtext: "100% Terdaftar",
     subColor: "text-emerald-600",
@@ -18,25 +18,25 @@ const stats = [
   },
   {
     label: "SUDAH HADIR",
-    value: "254",
-    unit: "94.1%",
-    subtext: "+12 vs kemarin",
+    value: "27",
+    unit: "90%",
+    subtext: "+3 vs kemarin",
     subColor: "text-emerald-600",
     variant: "success",
   },
   {
     label: "TERLAMBAT / IZIN",
-    value: "12",
+    value: "2",
     unit: "Siswa",
-    subtext: "8 Izin, 4 Telat Sesi 1",
+    subtext: "1 Izin, 1 Telat Sesi 1",
     subColor: "text-gray-500",
     variant: "warning",
   },
   {
     label: "BELUM HADIR / ALPA",
-    value: "4",
+    value: "3",
     unit: "Siswa",
-    subtext: "Perlu Tindak Lanjut: 4 (Hubungi Wali Murid)",
+    subtext: "Perlu Tindak Lanjut: 3",
     subColor: "text-red-600",
     variant: "danger",
   },
@@ -44,28 +44,31 @@ const stats = [
 
 const classes = [
   {
-    className: "7A",
-    totalStudents: 30,
-    present: 30,
+    kelasId: "7",
+    className: "Kelas 7",
+    totalStudents: 10,
+    present: 10,
     absent: 0,
     percent: 100,
     note: null,
   },
   {
-    className: "7B",
-    totalStudents: 30,
-    present: 28,
+    kelasId: "8",
+    className: "Kelas 8",
+    totalStudents: 10,
+    present: 9,
+    absent: 1,
+    percent: 90,
+    note: null,
+  },
+  {
+    kelasId: "9",
+    className: "Kelas 9",
+    totalStudents: 10,
+    present: 8,
     absent: 2,
-    percent: 93.3,
+    percent: 80,
     note: "2 belum hadir",
-  },
-  {
-    className: "7C",
-    totalStudents: 30,
-    present: 30,
-    absent: 0,
-    percent: 100,
-    note: null,
   },
 ];
 
@@ -91,13 +94,6 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <button className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
-                Segarkan
-              </button>
-              <span className="flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
-                <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                Mode Terminal RFID
-              </span>
             </div>
           </div>
 
@@ -112,19 +108,13 @@ export default function Dashboard() {
           <div className="mt-6">
             <div className="mb-3 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-gray-900">
-                  Monitoring 9 Kelas Real-Time
-                </h3>
+               <h3 className="text-base font-bold text-gray-900">
+        Monitoring per Tingkat Kelas
+      </h3>
                 <p className="mt-0.5 text-xs text-gray-500">
-                  Status kehadiran per kelas pada jam pemantauan berjalan saat ini
+                  Status kehadiran per tingkat kelas pada jam pemantauan berjalan saat ini
                 </p>
               </div>
-              <Link
-                 to="/all-classes"
-                 className="text-xs font-semibold text-emerald-700 hover:underline"
-                    >
-                 Lihat Semua 9 Kelas →
-                </Link>
             </div>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -141,17 +131,9 @@ export default function Dashboard() {
           </div>
 
           {/* Footer */}
-          <footer className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4 text-[10px] text-gray-400">
-            <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
-            <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-gray-600">Bantuan Teknis</a>
-              <a href="#" className="hover:text-gray-600">Kebijakan Privasi</a>
-              <div className="flex items-center gap-1.5 text-emerald-600">
-                <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                <span className="font-medium">Server Terhubung</span>
-              </div>
-            </div>
-          </footer>
+          <footer className="mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
+        <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
+      </footer>
         </main>
       </div>
     </div>

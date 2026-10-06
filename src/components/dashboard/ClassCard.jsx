@@ -1,4 +1,14 @@
-export default function ClassCard({ className, totalStudents, present, absent, percent, note }) {
+import { Link } from "react-router-dom";
+
+export default function ClassCard({
+  kelasId,
+  className,
+  totalStudents,
+  present,
+  absent,
+  percent,
+  note,
+}) {
   const isWarning = percent < 100;
 
   return (
@@ -44,18 +54,18 @@ export default function ClassCard({ className, totalStudents, present, absent, p
       {note && (
         <div className="mt-3">
           <span className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 8v4M12 16h.01" />
-            </svg>
             {note}
           </span>
         </div>
       )}
 
-      <button className="mt-3 w-full rounded-lg border border-gray-200 bg-white py-2 text-xs font-semibold text-gray-700 transition hover:bg-gray-50">
+      {/* ⬇️ Tombol Link ke Detail Kelas */}
+      <Link
+        to={`/detail-kelas/${kelasId}`}
+        className="mt-3 block w-full rounded-lg border border-gray-200 bg-white py-2 text-center text-xs font-semibold text-gray-700 transition hover:bg-gray-50"
+      >
         Lihat Detail Presensi
-      </button>
+      </Link>
     </div>
   );
 }

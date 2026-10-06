@@ -3,10 +3,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import LogoutModal from "../LogoutModal";
 
 const menuItems = [
-  { label: "Dashboard Utama", icon: "grid", path: "/dashboard", badge: null },
-  { label: "Rekap Kelas", icon: "book", path: "/rekap-kelas", badge: null },
-  { label: "Kalender & Agenda", icon: "calendar", path: "/kalender", badge: "3" },
-  { label: "Pengaturan", icon: "settings", path: "/pengaturan", badge: null },
+  { label: "Dashboard Utama", icon: "grid", paths: ["/dashboard"], badge: null },
+  { label: "Rekap Kelas", icon: "book", paths: ["/rekap-kelas", "/semua-kelas", "/detail-kelas", "/detail-lokasi", "/validasi-wajah"], badge: null },
+  { label: "Kalender & Agenda", icon: "calendar", paths: ["/kalender"], badge: null },
+  { label: "Pengaturan", icon: "settings", paths: ["/pengaturan"], badge: null },
 ];
 
 const icons = {
@@ -42,11 +42,6 @@ const icons = {
       <line x1="21" x2="9" y1="12" y2="12" />
     </svg>
   ),
-  chevron: (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  ),
 };
 
 export default function Sidebar() {
@@ -59,11 +54,15 @@ export default function Sidebar() {
       <aside className="flex w-60 shrink-0 flex-col border-r border-gray-200 bg-white">
         <div className="flex-1 space-y-1 p-4">
           {menuItems.map((item) => {
-            const isActive = location.pathname === item.path;
+            // Aktif kalau URL dimulai dengan salah satu path menu
+            const isActive = item.paths.some((p) =>
+              location.pathname.startsWith(p)
+            );
+
             return (
               <Link
-                key={item.path}
-                to={item.path}
+                key={item.label}
+                to={item.paths[0]}
                 className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                   isActive
                     ? "bg-emerald-700 text-white shadow-sm"
@@ -101,9 +100,12 @@ export default function Sidebar() {
           </button>
         </div>
 
-        {/* User Profile Card */}
+        {/* User Profile Card → Link ke Pengaturan */}
         <div className="border-t border-gray-100 p-3">
-          <div className="flex items-center gap-2.5 rounded-lg bg-gray-50 p-2.5">
+          <Link
+            to="/pengaturan"
+            className="flex items-center gap-2.5 rounded-lg bg-gray-50 p-2.5 transition hover:bg-emerald-50"
+          >
             <div className="relative">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white">
                 AF
@@ -118,10 +120,7 @@ export default function Sidebar() {
                 Online • Petugas Presensi
               </p>
             </div>
-            <button className="text-gray-400 hover:text-gray-600">
-              {icons.chevron}
-            </button>
-          </div>
+          </Link>
         </div>
       </aside>
 

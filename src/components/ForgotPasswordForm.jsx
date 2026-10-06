@@ -94,7 +94,7 @@ export default function ForgotPasswordForm() {
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
           </svg>
           <span className="text-sm font-bold text-emerald-800">
-            MTs Al-Ma'arif Ponorogo
+            MTs Al-Ma'arif Singosari
           </span>
         </div>
 
