@@ -319,9 +319,6 @@ export default function DetailKelas() {
                   className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-xs text-gray-800 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 />
               </div>
-              <button className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-2 text-xs font-bold text-white hover:bg-gray-800">
-                Cetak Laporan
-              </button>
             </div>
 
             <div className="overflow-x-auto">

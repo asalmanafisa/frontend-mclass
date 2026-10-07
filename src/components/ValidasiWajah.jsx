@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Sidebar from "./dashboard/Sidebar";
 import Topbar from "./dashboard/Topbar";
+import ModalSetujuiValidasi from "./ModalSetujuiValidasi";
+import ModalTolakValidasi from "./ModalTolakValidasi";
 
 // ============ DATA SISWA (10 per kelas) ============
 const SISWA_DATA = {
@@ -104,12 +106,37 @@ export default function ValidasiWajah() {
   const [catatan, setCatatan] = useState("");
   const [preview, setPreview] = useState(null);
 
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
+
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [isRejecting, setIsRejecting] = useState(false);
+
   // Hitung persentase radius
   const persenRadius = Math.min((JARAK_SISWA / RADIUS_GEOFENCE) * 100, 100);
   const dalamRadius = JARAK_SISWA <= RADIUS_GEOFENCE;
 
-  const handleApprove = () => setStatus("approved");
-  const handleReject = () => setStatus("rejected");
+  const handleApprove = () => setShowApproveModal(true);
+
+  const handleConfirmApprove = () => {
+    setIsApproving(true);
+    setTimeout(() => {
+      setIsApproving(false);
+      setShowApproveModal(false);
+      setStatus("approved");
+    }, 800);
+  };
+  const handleReject = () => setShowRejectModal(true);
+
+  const handleConfirmReject = (alasan) => {
+    setIsRejecting(true);
+    setTimeout(() => {
+      setIsRejecting(false);
+      setShowRejectModal(false);
+      setCatatan(alasan);
+      setStatus("rejected");
+    }, 800);
+  };
   const handleReset = () => {
     setStatus("pending");
     setCatatan("");
@@ -354,6 +381,22 @@ export default function ValidasiWajah() {
               </button>
             </div>
           </div>
+
+          <ModalSetujuiValidasi
+            isOpen={showApproveModal}
+            onClose={() => setShowApproveModal(false)}
+            onConfirm={handleConfirmApprove}
+            siswa={siswa}
+            isLoading={isApproving}
+          />
+
+          <ModalTolakValidasi
+            isOpen={showRejectModal}
+            onClose={() => setShowRejectModal(false)}
+            onConfirm={handleConfirmReject}
+            siswa={siswa}
+            isLoading={isRejecting}
+          />
 
           {/* Footer */}
           <footer className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4 text-[10px] text-gray-400">
