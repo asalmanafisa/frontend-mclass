@@ -17,8 +17,8 @@ const aktivitasLog = [
   {
     device: "Aplikasi Android Premium",
     detail: "Google Play Store, Android 14",
-    location: "Ponorogo, Jawa Timur",
-    time: "13 Oct 2025 14:22",
+    location: "Malang, Jawa Timur",
+    time: "13 Oct 2026 14:22",
     active: false,
     icon: "android",
   },
