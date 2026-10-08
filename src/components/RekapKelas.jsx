@@ -357,7 +357,7 @@ export default function RekapKelas() {
           <section className="mt-6 rounded-xl border border-gray-200 bg-white">
             <div className="flex items-center justify-between border-b border-gray-100 p-5">
               <div>
-                <h3 className="text-base font-bold text-gray-900">Ringkasan Presensi per Kelas Hari Ini</h3>
+                <h3 className="text-base font-bold text-gray-900">Ringkasan Presensi Kelas Per Bulan</h3>
                 <p className="mt-0.5 text-xs text-gray-500">
                   Data diperbarui secara real-time. Terakhir diperbarui 07:30 WIB.
                 </p>
