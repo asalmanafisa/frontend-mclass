@@ -333,7 +333,7 @@ export default function RekapKelas() {
               </div>
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-center">
-                  <p className="text-2xl font-extrabold text-gray-900">90</p>
+                  <p className="text-2xl font-extrabold text-gray-900">30</p>
                   <p className="text-[10px] text-gray-500">Siswa Terpantau</p>
                 </div>
                 <div className="rounded-lg border border-red-100 bg-red-50 p-3 text-center">
