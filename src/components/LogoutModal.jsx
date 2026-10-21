@@ -16,14 +16,14 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+      {/* Backdrop dengan animasi fade-in */}
       <div
-        className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+        className="animate-backdrop absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
         onClick={onClose}
       ></div>
 
-      {/* Modal */}
-      <div className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
+      {/* Modal Container dengan animasi scale-up */}
+      <div className="animate-modal relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
         {/* Header */}
         <div className="flex items-start justify-between border-b border-gray-100 p-5">
           <div className="flex items-start gap-3">
@@ -82,6 +82,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
         {/* Body */}
         <div className="p-5">
           <p className="text-xs leading-relaxed text-gray-600">
+            Sesi aktif Anda sebagai Guru Piket akan diakhiri. Pastikan semua verifikasi presensi santri dan sinkronisasi data hari ini telah tersimpan dengan aman sebelum meninggalkan perangkat.
           </p>
 
           {/* User Info Card */}
@@ -164,7 +165,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
                 </svg>
               </div>
               <p className="text-[10px] leading-relaxed text-emerald-800">
-                <strong>Semua rekaman presensi hari ini (270 Santri)</strong>{" "}
+                <strong>Semua rekaman presensi hari ini (30 Santri)</strong>{" "}
                 telah tersinkronisasi ke Cloud Kemenag & SIMPATIKA.
                 <br />
                 Status antrean lokal: <strong>0 antrean tertunda (Aman).</strong>

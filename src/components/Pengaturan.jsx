@@ -3,6 +3,7 @@ import Sidebar from "./dashboard/Sidebar";
 import Topbar from "./dashboard/Topbar";
 import ModalGantiFoto from "./ModalGantiFoto";
 import ModalHapusFoto from "./ModalHapusFoto";
+import Toast from "./Toast"; // ⬅️ Tambahkan ini
 
 // ============ DATA ============
 const aktivitasLog = [
@@ -114,10 +115,21 @@ export default function Pengaturan() {
 
   const [isSaving, setIsSaving] = useState(false);
 
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+
   const [showFotoModal, setShowFotoModal] = useState(false);
 
   const [showHapusModal, setShowHapusModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [toast, setToast] = useState({
+    open: false,
+    title: "",
+    message: "",
+    type: "success",
+  });
+
+// State untuk menyimpan foto profil yang baru di-upload
+const [fotoProfil, setFotoProfil] = useState(null);
 
   const handleSave = () => {
     setIsSaving(true);
@@ -129,13 +141,57 @@ export default function Pengaturan() {
 
 const handleHapusFoto = () => {
   setIsDeleting(true);
+
+  // Simulasi loading 800ms
   setTimeout(() => {
     setIsDeleting(false);
     setShowHapusModal(false);
-    alert("Foto profil berhasil dihapus. Avatar default telah diterapkan.");
+
+    // 1. Hapus foto profil (kembalikan ke inisial default)
+    setFotoProfil(null);
+
+    // 2. Tampilkan Toast Sukses
+    setToast({
+      open: true,
+      title: "Foto Profil Dihapus",
+      message: "Foto profil berhasil dihapus. Avatar default telah diterapkan.",
+      type: "success",
+    });
   }, 800);
 };
 
+const handleSimpanPerubahan = () => {
+  setIsSavingProfile(true);
+
+  // Simulasi loading 800ms
+  setTimeout(() => {
+    setIsSavingProfile(false);
+
+    // Tampilkan Toast
+    setToast({
+      open: true,
+      title: "Perubahan Berhasil Disimpan",
+      message: "Data profil dan pengaturan akun Anda telah diperbarui.",
+      type: "success",
+    });
+  }, 800);
+};
+
+const handleSimpanFoto = (newFotoUrl) => {
+  // 1. Simpan foto ke state utama
+  setFotoProfil(newFotoUrl);
+
+  // 2. Tutup modal (jika menggunakan state showFotoModal)
+  setShowFotoModal(false);
+
+  // 3. Tampilkan Toast Notifikasi
+  setToast({
+    open: true,
+    title: "Foto Profil Berhasil Disimpan",
+    message: "Foto profil Anda telah diperbarui dan disinkronkan.",
+    type: "success",
+  });
+};
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       <Sidebar />
@@ -196,9 +252,13 @@ const handleHapusFoto = () => {
               {/* ==== KARTU PROFIL ==== */}
               <div className="rounded-xl border border-gray-200 bg-white p-5 text-center">
                 {/* Avatar */}
-                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border-4 border-emerald-100 bg-emerald-700 text-3xl font-extrabold text-white">
-                  HF
-                </div>
+                <div className="mx-auto flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-emerald-100 bg-emerald-700 text-3xl font-extrabold text-white">
+  {fotoProfil ? (
+    <img src={fotoProfil} alt="Foto Profil" className="h-full w-full object-cover" />
+  ) : (
+    "HF"
+  )}
+</div>
 
                 <h4 className="mt-3 text-sm font-bold text-gray-900">
                   {profile.nama}
@@ -455,53 +515,57 @@ const handleHapusFoto = () => {
                     Batal
                   </button>
                   <button
-                    onClick={handleSave}
-                    disabled={isSaving}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-800 disabled:opacity-70"
-                  >
-                    {isSaving ? (
-                      <>
-                        <svg className="h-3.5 w-3.5 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        Menyimpan...
-                      </>
-                    ) : (
-                      <>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                          <polyline points="17 21 17 13 7 13 7 21" />
-                          <polyline points="7 3 7 8 15 8" />
-                        </svg>
-                        Simpan perubahan
-                      </>
-                    )}
-                  </button>
+        onClick={handleSimpanPerubahan} // ⬅️ TAMBAHKAN INI
+        disabled={isSavingProfile}      // ⬅️ Agar tombol mati saat loading
+        className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-800 disabled:opacity-70"
+>
+  {isSavingProfile ? (
+    <>
+      <svg className="h-3.5 w-3.5 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+      </svg>
+      Menyimpan...
+    </>
+  ) : (
+    <>
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+        <polyline points="17 21 17 13 7 13 7 21" />
+        <polyline points="7 3 7 8 15 8" />
+      </svg>
+      Simpan perubahan
+    </>
+  )}
+</button>
                 </div>
               </div>
             </div>
           </div>
 
-{/* ⬇️ MODAL TARUH DI SINI ⬇️ */}
-  <ModalGantiFoto
-    isOpen={showFotoModal}
-    onClose={() => setShowFotoModal(false)}
-    user={profile}
-  />
+<ModalGantiFoto
+  isOpen={showFotoModal}
+  onClose={() => setShowFotoModal(false)}
+  onConfirm={handleSimpanFoto}
+  user={{ ...profile }}
+/>
 
   {/* MODAL HAPUS FOTO */}
 <ModalHapusFoto
   isOpen={showHapusModal}
   onClose={() => setShowHapusModal(false)}
-  onConfirm={handleHapusFoto}
-  user={{
-    nama: profile.nama,
-    idPetugas: "AGM-089",
-    unit: "MTs Al-Ma'arif",
-    avatarSeed: "AF",
-  }}
-  isDeleting={isDeleting}
+  onConfirm={handleHapusFoto} // ⬅️ Hubungkan fungsinya di sini
+  isLoading={isDeleting}      // ⬅️ Agar tombol loading berputar
+  user={{ ...profile }}
+/>
+
+{/* TOAST NOTIFIKASI */}
+<Toast
+  isOpen={toast.open}
+  onClose={() => setToast({ ...toast, open: false })}
+  title={toast.title}
+  message={toast.message}
+  type={toast.type}
 />
 
           {/* Footer */}

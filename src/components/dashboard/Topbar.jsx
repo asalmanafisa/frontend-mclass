@@ -1,8 +1,18 @@
-export default function Topbar() {
+export default function Topbar({ onMenuClick }) {
   return (
-    <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-2.5">
+    <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2.5 md:px-6">
       {/* Kiri: Logo M-Class + Badge */}
       <div className="flex items-center gap-3">
+        {/* ⬇️ TOMBOL SANDWICH (Hanya muncul di layar < lg) */}
+        <button
+          onClick={onMenuClick}
+          className="rounded-md p-1 text-gray-600 hover:bg-gray-100 lg:hidden"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-700">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
@@ -12,11 +22,11 @@ export default function Topbar() {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-base font-bold text-gray-900">M-Class</h1>
-            <span className="rounded bg-emerald-600 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-white">
+            <span className="hidden rounded bg-emerald-600 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-white sm:inline-block">
               MTS AL-MA'ARIF
             </span>
           </div>
-          <p className="text-[10px] text-gray-500">
+          <p className="hidden text-[10px] text-gray-500 sm:block">
             Sistem Presensi Digital & Verifikasi Geospasial
           </p>
         </div>
@@ -24,10 +34,7 @@ export default function Topbar() {
 
       {/* Kanan: Status & Buttons */}
       <div className="flex items-center gap-2">
-      
-
-
-
+        {/* Tempatkan tombol-tombol kananmu di sini */}
       </div>
     </header>
   );

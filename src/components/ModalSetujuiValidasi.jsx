@@ -10,14 +10,14 @@ export default function ModalSetujuiValidasi({ isOpen, onClose, onConfirm, siswa
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+      {/* Backdrop dengan animasi fade-in */}
       <div
-        className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+        className="animate-backdrop absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
         onClick={onClose}
       ></div>
 
-      {/* Modal */}
-      <div className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
+      {/* Modal Container dengan animasi scale-up */}
+      <div className="animate-modal relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
         {/* Header */}
         <div className="flex items-start justify-between border-b border-gray-100 p-5">
           <div className="flex items-start gap-3">

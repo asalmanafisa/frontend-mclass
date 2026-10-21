@@ -74,17 +74,22 @@ const classes = [
 
 export default function Dashboard() {
   const [lastSync] = useState("07.30 WIB");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        <Topbar />
+        <Topbar onMenuClick={() => setIsSidebarOpen(true)} />
 
-        <main className="flex-1 overflow-y-auto p-6">
-          {/* Page Header */}
-          <div className="mb-5 flex items-start justify-between">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+
+          {/* Page Header - Animasi Masuk */}
+          <div className="animate-item delay-100 mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div>
               <h2 className="text-xl font-extrabold text-gray-900">
                 Dashboard Pemantauan Presensi Harian
@@ -93,47 +98,49 @@ export default function Dashboard() {
                 Monitoring kehadiran siswa real-time MTs Al-Ma'arif O2 Singosari
               </p>
             </div>
-            <div className="flex items-center gap-2">
-            </div>
           </div>
 
-          {/* Stat Cards */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {/* Stat Cards - Animasi Masuk */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((s, i) => (
-              <StatCard key={i} {...s} />
+              <div key={i} className="animate-item delay-200">
+                <StatCard {...s} />
+              </div>
             ))}
           </div>
 
-          {/* Monitoring Section */}
-          <div className="mt-6">
-            <div className="mb-3 flex items-center justify-between">
+          {/* Monitoring Section - Animasi Masuk */}
+          <div className="animate-item delay-300 mt-6">
+            <div className="mb-3 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
               <div>
-               <h3 className="text-base font-bold text-gray-900">
-        Monitoring per Tingkat Kelas
-      </h3>
+                <h3 className="text-base font-bold text-gray-900">
+                  Monitoring per Tingkat Kelas
+                </h3>
                 <p className="mt-0.5 text-xs text-gray-500">
                   Status kehadiran per tingkat kelas pada jam pemantauan berjalan saat ini
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {classes.map((c, i) => (
-                <ClassCard key={i} {...c} />
+                <div key={i} className="transition-transform duration-300 hover:-translate-y-1">
+                  <ClassCard {...c} />
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Bottom Grid: Announcement + Calendar */}
-          <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_1fr]">
+          {/* Bottom Grid - Animasi Masuk */}
+          <div className="animate-item delay-400 mt-6 grid grid-cols-1 gap-4 xl:grid-cols-[1.4fr_1fr]">
             <AnnouncementList />
             <CalendarWidget />
           </div>
 
-          {/* Footer */}
-          <footer className="mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
-        <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
-      </footer>
+          {/* Footer - Animasi Masuk */}
+          <footer className="animate-item delay-400 mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
+            <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
+          </footer>
         </main>
       </div>
     </div>

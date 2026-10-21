@@ -7,7 +7,8 @@ export default function StatCard({ label, value, unit, subtext, subColor = "text
   };
 
   return (
-    <div className={`rounded-xl border p-4 ${variants[variant]}`}>
+    // ⬇️ Tambahkan transition-all duration-300 hover:shadow-md hover:-translate-y-1
+    <div className={`rounded-xl border p-4 ${variants[variant]} transition-all duration-300 hover:-translate-y-1 hover:shadow-md`}>
       <div className="flex items-start justify-between">
         <p className="text-xs font-bold tracking-wide text-gray-700">
           {label}

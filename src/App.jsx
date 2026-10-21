@@ -4,7 +4,7 @@ import Footer from "./components/Footer";
 import RegistrationForm from "./components/RegistrationForm";
 import LoginForm from "./components/LoginForm";
 import ForgotPasswordForm from "./components/ForgotPasswordForm";
-import Dashboard from "./components/Dashboard"; 
+import Dashboard from "./components/Dashboard";
 import SemuaKelas from "./components/SemuaKelas";
 import RekapKelas from "./components/RekapKelas";
 import KalenderAgenda from "./components/KalenderAgenda";
@@ -12,14 +12,24 @@ import Pengaturan from "./components/Pengaturan";
 import DetailKelas from "./components/DetailKelas";
 import DetailLokasi from "./components/DetailLokasi";
 import ValidasiWajah from "./components/ValidasiWajah";
+import BuatPengumuman from "./components/BuatPengumuman";
 
 function AuthLayout({ children }) {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    // ⬇️ Tambahkan relative & overflow-hidden untuk animasi background
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-gray-50">
+
+      {/* Ornamen Background Beranimasi */}
+      <div className="pointer-events-none absolute left-[-10%] top-[-10%] h-[500px] w-[500px] animate-pulse-bg rounded-full bg-emerald-100/40 blur-3xl"></div>
+      <div className="pointer-events-none absolute bottom-[-10%] right-[-10%] h-[400px] w-[400px] animate-pulse-bg rounded-full bg-teal-100/40 blur-3xl" style={{ animationDelay: '2s' }}></div>
+
       <Header />
-      <main className="flex flex-1 items-start justify-center px-4 py-10">
+
+      {/* main butuh relative & z-10 agar berada di atas ornamen background */}
+      <main className="relative z-10 flex flex-1 items-center justify-center p-4 md:p-6">
         {children}
       </main>
+
       <Footer />
     </div>
   );
@@ -35,16 +45,16 @@ export default function App() {
         <Route path="/register" element={<AuthLayout><RegistrationForm /></AuthLayout>} />
         <Route path="/forgot-password" element={<AuthLayout><ForgotPasswordForm /></AuthLayout>} />
 
-        {/* Dashboard Route (full-screen tanpa Header/Footer publik) */}
-        <Route path="/login" element={<LoginForm />} />
+        {/* Dashboard & Main Routes */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/rekap-kelas" element={<RekapKelas />} />
         <Route path="/detail-kelas/:kelas" element={<DetailKelas />} />
         <Route path="/detail-lokasi" element={<DetailLokasi />} />
-        <Route path="/semua-kelas" element={<SemuaKelas />} /> {/* path tetap /all-classes biar link lama tetap jalan */}
+        <Route path="/semua-kelas" element={<SemuaKelas />} />
         <Route path="/kalender" element={<KalenderAgenda />} />
         <Route path="/pengaturan" element={<Pengaturan />} />
         <Route path="/validasi-wajah/:nis" element={<ValidasiWajah />} />
+        <Route path="/buat-pengumuman" element={<BuatPengumuman />} />
       </Routes>
     </BrowserRouter>
   );

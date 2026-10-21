@@ -4,44 +4,14 @@ import Sidebar from "./dashboard/Sidebar";
 import Topbar from "./dashboard/Topbar";
 import ModalSetujuiValidasi from "./ModalSetujuiValidasi";
 import ModalTolakValidasi from "./ModalTolakValidasi";
+import Toast from "./Toast";
 
-// ============ DATA SISWA (10 per kelas) ============
+// ============ DATA SISWA ============
 const SISWA_DATA = {
-  // ============ KELAS 7 ============
-  "2601001": { nis: "2601001", nama: "Achmad Shodiq", kelas: "7", jenisKelamin: "L", tanggalLahir: "12 Mei 2013", waliMurid: "Bpk. Suryanto", avatarSeed: "achmad-shodiq" },
-  "2601002": { nis: "2601002", nama: "Aisyah Nabila", kelas: "7", jenisKelamin: "P", tanggalLahir: "04 Agustus 2013", waliMurid: "Bpk. Hendra", avatarSeed: "aisyah-nabila" },
-  "2601003": { nis: "2601003", nama: "Alamsyah Putra", kelas: "7", jenisKelamin: "L", tanggalLahir: "21 Maret 2013", waliMurid: "Bpk. Suparman", avatarSeed: "alamsyah-putra" },
-  "2601004": { nis: "2601004", nama: "Anisa Rahmawati", kelas: "7", jenisKelamin: "P", tanggalLahir: "15 Juni 2013", waliMurid: "Bpk. Sutrisno", avatarSeed: "anisa-rahmawati" },
-  "2601005": { nis: "2601005", nama: "Bagus Setiawan", kelas: "7", jenisKelamin: "L", tanggalLahir: "09 September 2013", waliMurid: "Bpk. Agus", avatarSeed: "bagus-setiawan" },
-  "2601006": { nis: "2601006", nama: "Dewi Lestari", kelas: "7", jenisKelamin: "P", tanggalLahir: "23 Januari 2013", waliMurid: "Bpk. Wibowo", avatarSeed: "dewi-lestari" },
-  "2601007": { nis: "2601007", nama: "Fajar Nugraha", kelas: "7", jenisKelamin: "L", tanggalLahir: "07 Juli 2013", waliMurid: "Bpk. Santoso", avatarSeed: "fajar-nugraha" },
-  "2601008": { nis: "2601008", nama: "Hendra Wijaya", kelas: "7", jenisKelamin: "L", tanggalLahir: "18 Februari 2013", waliMurid: "Bpk. Setiawan", avatarSeed: "hendra-wijaya" },
-  "2601009": { nis: "2601009", nama: "Indah Permatasari", kelas: "7", jenisKelamin: "P", tanggalLahir: "30 Oktober 2013", waliMurid: "Bpk. Rahmat", avatarSeed: "indah-permatasari" },
-  "2601010": { nis: "2601010", nama: "Joko Purnomo", kelas: "7", jenisKelamin: "L", tanggalLahir: "11 April 2013", waliMurid: "Bpk. Sutarno", avatarSeed: "joko-purnomo" },
-
-  // ============ KELAS 8 ============
+  "2601001": { nis: "2601001", nama: "Achmad Shodiq", kelas: "7", jenisKelamin: "L", tanggalLahir: "12 Mei 2013", waliMurid: "Bpk. Suryanto", avatarSeed: "achmad" },
+  "2601002": { nis: "2601002", nama: "Aisyah Nabila", kelas: "7", jenisKelamin: "P", tanggalLahir: "04 Agustus 2013", waliMurid: "Bpk. Hendra", avatarSeed: "aisyah" },
   "2602001": { nis: "2602001", nama: "Abdul Rahman", kelas: "8", jenisKelamin: "L", tanggalLahir: "05 Mei 2012", waliMurid: "Bpk. Hermawan", avatarSeed: "abdul-rahman" },
-  "2602002": { nis: "2602002", nama: "Bunga Lestari", kelas: "8", jenisKelamin: "P", tanggalLahir: "19 Juli 2012", waliMurid: "Bpk. Kurniawan", avatarSeed: "bunga-lestari" },
-  "2602003": { nis: "2602003", nama: "Cinta Laura", kelas: "8", jenisKelamin: "P", tanggalLahir: "14 Maret 2012", waliMurid: "Bpk. Sutrisno", avatarSeed: "cinta-laura" },
-  "2602004": { nis: "2602004", nama: "Dimas Anggara", kelas: "8", jenisKelamin: "L", tanggalLahir: "22 Agustus 2012", waliMurid: "Bpk. Widodo", avatarSeed: "dimas-anggara" },
-  "2602005": { nis: "2602005", nama: "Erika Putri", kelas: "8", jenisKelamin: "P", tanggalLahir: "30 Juni 2012", waliMurid: "Bpk. Suharto", avatarSeed: "erika-putri" },
-  "2602006": { nis: "2602006", nama: "Fajar Alfian", kelas: "8", jenisKelamin: "L", tanggalLahir: "17 September 2012", waliMurid: "Bpk. Sutopo", avatarSeed: "fajar-alfian" },
-  "2602007": { nis: "2602007", nama: "Gina Sari", kelas: "8", jenisKelamin: "P", tanggalLahir: "08 Januari 2012", waliMurid: "Bpk. Sukardi", avatarSeed: "gina-sari" },
-  "2602008": { nis: "2602008", nama: "Hendra Setiawan", kelas: "8", jenisKelamin: "L", tanggalLahir: "25 November 2012", waliMurid: "Bpk. Mustofa", avatarSeed: "hendra-setiawan" },
-  "2602009": { nis: "2602009", nama: "Ika Nurlia", kelas: "8", jenisKelamin: "P", tanggalLahir: "13 Februari 2012", waliMurid: "Bpk. Sudirman", avatarSeed: "ika-nurlia" },
-  "2602010": { nis: "2602010", nama: "Joko Widodo", kelas: "8", jenisKelamin: "L", tanggalLahir: "10 Oktober 2012", waliMurid: "Bpk. Sugiyanto", avatarSeed: "joko-widodo" },
-
-  // ============ KELAS 9 ============
   "2603001": { nis: "2603001", nama: "Aang Kunaefi", kelas: "9", jenisKelamin: "L", tanggalLahir: "12 Maret 2011", waliMurid: "Bpk. Suparno", avatarSeed: "aang-kunaefi" },
-  "2603002": { nis: "2603002", nama: "Bambang Pamungkas", kelas: "9", jenisKelamin: "L", tanggalLahir: "08 Juni 2011", waliMurid: "Bpk. Sunarto", avatarSeed: "bambang-pamungkas" },
-  "2603003": { nis: "2603003", nama: "Cristian Gonzales", kelas: "9", jenisKelamin: "L", tanggalLahir: "30 Oktober 2011", waliMurid: "Bpk. Sujarwo", avatarSeed: "cristian-gonzales" },
-  "2603004": { nis: "2603004", nama: "David Beckham", kelas: "9", jenisKelamin: "L", tanggalLahir: "02 Mei 2011", waliMurid: "Bpk. Soekarwo", avatarSeed: "david-beckham" },
-  "2603005": { nis: "2603005", nama: "Egy Maulana", kelas: "9", jenisKelamin: "L", tanggalLahir: "07 Juli 2011", waliMurid: "Bpk. Hariyanto", avatarSeed: "egy-maulana" },
-  "2603006": { nis: "2603006", nama: "Firman Utina", kelas: "9", jenisKelamin: "L", tanggalLahir: "15 Desember 2011", waliMurid: "Bpk. Susilo", avatarSeed: "firman-utina" },
-  "2603007": { nis: "2603007", nama: "Gede Widiade", kelas: "9", jenisKelamin: "L", tanggalLahir: "21 Januari 2011", waliMurid: "Bpk. Suryono", avatarSeed: "gede-widiade" },
-  "2603008": { nis: "2603008", nama: "Hendra Bayauw", kelas: "9", jenisKelamin: "L", tanggalLahir: "09 April 2011", waliMurid: "Bpk. Sugeng", avatarSeed: "hendra-bayauw" },
-  "2603009": { nis: "2603009", nama: "Irfan Bachdim", kelas: "9", jenisKelamin: "L", tanggalLahir: "10 Agustus 2011", waliMurid: "Bpk. Joko", avatarSeed: "irfan-bachdim" },
-  "2603010": { nis: "2603010", nama: "Jack Brown", kelas: "9", jenisKelamin: "L", tanggalLahir: "05 Mei 2011", waliMurid: "Bpk. Steven", avatarSeed: "jack-brown" },
 };
 
 const getSiswa = (nis) => {
@@ -61,8 +31,8 @@ const getWajahUrl = (seed, size = 300) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(seed)}&size=${size}&background=047857&color=fff&bold=true`;
 
 // ============ DATA RADIUS ============
-const RADIUS_GEOFENCE = 50; // meter
-const JARAK_SISWA = 12; // meter (bisa dari API nanti)
+const RADIUS_GEOFENCE = 50;
+const JARAK_SISWA = 12;
 
 // ============ ICON MAP ============
 const icons = {
@@ -112,22 +82,33 @@ export default function ValidasiWajah() {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
 
-  // Hitung persentase radius
+  const [toast, setToast] = useState({
+    open: false,
+    title: "",
+    message: "",
+    type: "success",
+  });
+
   const persenRadius = Math.min((JARAK_SISWA / RADIUS_GEOFENCE) * 100, 100);
   const dalamRadius = JARAK_SISWA <= RADIUS_GEOFENCE;
 
   const handleApprove = () => setShowApproveModal(true);
-
   const handleConfirmApprove = () => {
     setIsApproving(true);
     setTimeout(() => {
       setIsApproving(false);
       setShowApproveModal(false);
       setStatus("approved");
+      setToast({
+        open: true,
+        title: "Validasi Wajah Berhasil",
+        message: `Data biometrik ${siswa.nama} telah diverifikasi dan disimpan.`,
+        type: "success",
+      });
     }, 800);
   };
-  const handleReject = () => setShowRejectModal(true);
 
+  const handleReject = () => setShowRejectModal(true);
   const handleConfirmReject = (alasan) => {
     setIsRejecting(true);
     setTimeout(() => {
@@ -135,8 +116,15 @@ export default function ValidasiWajah() {
       setShowRejectModal(false);
       setCatatan(alasan);
       setStatus("rejected");
+      setToast({
+        open: true,
+        title: "Validasi Ditolak",
+        message: `Foto wajah ${siswa.nama} ditolak. Siswa diminta mengunggah ulang.`,
+        type: "error",
+      });
     }, 800);
   };
+
   const handleReset = () => {
     setStatus("pending");
     setCatatan("");
@@ -162,11 +150,11 @@ export default function ValidasiWajah() {
 
         <main className="flex-1 overflow-y-auto p-6">
 
-          {/* Header */}
-          <div className="mt-3 mb-5 flex items-start gap-3">
+          {/* Header - Animasi Masuk */}
+          <div className="animate-item delay-100 mt-3 mb-5 flex items-start gap-3">
             <Link
               to={`/detail-kelas/${siswa.kelas}`}
-              className="mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+              className="mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="m12 19-7-7 7-7M19 12H5" />
@@ -182,8 +170,8 @@ export default function ValidasiWajah() {
             </div>
           </div>
 
-          {/* Info Siswa */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5">
+          {/* Info Siswa - Animasi Masuk */}
+          <div className="animate-item delay-200 rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:shadow-md">
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
                 {icons.user}
@@ -223,8 +211,8 @@ export default function ValidasiWajah() {
             </div>
           </div>
 
-          {/* === Foto Validasi Hari Ini === */}
-          <div className="mt-6 rounded-xl border border-gray-200 bg-white p-5">
+          {/* Foto Validasi Hari Ini - Animasi Masuk */}
+          <div className="animate-item delay-300 mt-6 rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:shadow-md">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-gray-900">Foto Wajah Hari Ini</h3>
@@ -240,18 +228,18 @@ export default function ValidasiWajah() {
             <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-[300px_1fr]">
               {/* Foto */}
               <div className="flex justify-center lg:justify-start">
-                <div className="relative">
+                <div className="relative group">
                   {preview ? (
                     <img
                       src={preview}
                       alt="Preview foto validasi"
-                      className="h-72 w-72 rounded-xl border-4 border-amber-100 object-cover"
+                      className="h-72 w-72 rounded-xl border-4 border-amber-100 object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                     />
                   ) : (
                     <img
                       src={getWajahUrl(siswa.avatarSeed || siswa.nama, 300)}
                       alt={`Foto validasi ${siswa.nama}`}
-                      className="h-72 w-72 rounded-xl border-4 border-amber-100 object-cover"
+                      className="h-72 w-72 rounded-xl border-4 border-amber-100 object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                     />
                   )}
                   <span className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full bg-amber-600 px-2.5 py-1 text-[10px] font-bold text-white shadow-lg">
@@ -293,9 +281,7 @@ export default function ValidasiWajah() {
                   {/* Progress Bar Radius */}
                   <div className="mt-3 rounded-lg border border-gray-100 bg-white p-2.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-gray-700">
-                        Radius Terpakai
-                      </span>
+                      <span className="text-[10px] font-bold text-gray-700">Radius Terpakai</span>
                       <span className={`text-[10px] font-bold ${dalamRadius ? "text-emerald-700" : "text-red-600"}`}>
                         {JARAK_SISWA} / {RADIUS_GEOFENCE} m
                       </span>
@@ -306,47 +292,18 @@ export default function ValidasiWajah() {
                         style={{ width: `${persenRadius}%` }}
                       ></div>
                     </div>
-                    <p
-                      className={`mt-1.5 flex items-center gap-1 text-[10px] font-semibold ${
-                        dalamRadius ? "text-emerald-700" : "text-red-600"
-                      }`}
-                    >
+                    <p className={`mt-1.5 flex items-center gap-1 text-[10px] font-semibold ${dalamRadius ? "text-emerald-700" : "text-red-600"}`}>
                       {icons.pin}
-                      {dalamRadius
-                        ? "Dalam radius geofence (aman)"
-                        : "Di luar radius geofence (perlu tindak lanjut)"}
+                      {dalamRadius ? "Dalam radius geofence (aman)" : "Di luar radius geofence (perlu tindak lanjut)"}
                     </p>
-                  </div>
-
-                  <div className="mt-3 rounded-lg border border-dashed border-amber-200 bg-amber-50/60 p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-700">
-                          Status Pengambilan
-                        </p>
-                        <p className="mt-1 text-[10px] text-amber-700">
-                          {dalamRadius
-                            ? "Foto validasi berhasil diambil di lokasi aman."
-                            : "Foto validasi diambil di luar radius geofence, perlu tindak lanjut."}
-                        </p>
-                      </div>
-                      <span
-                        className={`rounded-full px-2 py-1 text-[10px] font-bold ${
-                          dalamRadius ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {dalamRadius ? "AMAN" : "PERHATIAN"}
-                      </span>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-
-          {/* Action Buttons */}
-          <div className="mt-6 flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4">
+          {/* Action Buttons - Animasi Masuk */}
+          <div className="animate-item delay-400 mt-6 flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 transition-all duration-300 hover:shadow-md">
             <p className="text-[10px] text-gray-500">
               {status === "pending"
                 ? "Pilih tindakan validasi di sebelah kanan."
@@ -356,17 +313,14 @@ export default function ValidasiWajah() {
             </p>
             <div className="flex items-center gap-2">
               {status !== "pending" && (
-                <button
-                  onClick={handleReset}
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
-                >
+                <button onClick={handleReset} className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
                   Reset
                 </button>
               )}
               <button
                 onClick={handleReject}
                 disabled={status !== "pending"}
-                className="flex items-center gap-1.5 rounded-lg border border-red-300 bg-white px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-red-300 bg-white px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 hover:shadow-sm active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {icons.close}
                 Tolak Validasi
@@ -374,7 +328,7 @@ export default function ValidasiWajah() {
               <button
                 onClick={handleApprove}
                 disabled={status !== "pending"}
-                className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-800 hover:shadow-md active:scale-[0.98] transition-all disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {icons.check}
                 Setujui Validasi
@@ -382,6 +336,7 @@ export default function ValidasiWajah() {
             </div>
           </div>
 
+          {/* MODALS & TOAST */}
           <ModalSetujuiValidasi
             isOpen={showApproveModal}
             onClose={() => setShowApproveModal(false)}
@@ -389,7 +344,6 @@ export default function ValidasiWajah() {
             siswa={siswa}
             isLoading={isApproving}
           />
-
           <ModalTolakValidasi
             isOpen={showRejectModal}
             onClose={() => setShowRejectModal(false)}
@@ -398,8 +352,15 @@ export default function ValidasiWajah() {
             isLoading={isRejecting}
           />
 
-          {/* Footer */}
-          <footer className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4 text-[10px] text-gray-400">
+          <Toast
+            isOpen={toast.open}
+            onClose={() => setToast({ ...toast, open: false })}
+            title={toast.title}
+            message={toast.message}
+            type={toast.type}
+          />
+
+          <footer className="animate-item delay-400 mt-6 flex items-center justify-between border-t border-gray-200 pt-4 text-[10px] text-gray-400">
             <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
           </footer>
         </main>

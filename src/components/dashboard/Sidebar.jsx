@@ -5,7 +5,7 @@ import LogoutModal from "../LogoutModal";
 const menuItems = [
   { label: "Dashboard Utama", icon: "grid", paths: ["/dashboard"], badge: null },
   { label: "Rekap Kelas", icon: "book", paths: ["/rekap-kelas", "/semua-kelas", "/detail-kelas", "/detail-lokasi", "/validasi-wajah"], badge: null },
-  { label: "Kalender & Agenda", icon: "calendar", paths: ["/kalender"], badge: null },
+  { label: "Kalender & Agenda", icon: "calendar", paths: ["/kalender", "/buat-pengumuman"], badge: null },
   { label: "Pengaturan", icon: "settings", paths: ["/pengaturan"], badge: null },
 ];
 
@@ -44,15 +44,37 @@ const icons = {
   ),
 };
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [showLogout, setShowLogout] = useState(false);
 
   return (
     <>
-      <aside className="flex w-60 shrink-0 flex-col border-r border-gray-200 bg-white">
-        <div className="flex-1 space-y-1 p-4">
+      {/* Backdrop (Hanya muncul di mobile saat sidebar terbuka) */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-gray-900/50 lg:hidden"
+          onClick={onClose}
+        ></div>
+      )}
+
+      {/* Sidebar Container */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex w-60 shrink-0 flex-col border-r border-gray-200 bg-white transition-transform duration-300 lg:static lg:translate-x-0 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Tombol Close (X) - Hanya untuk Mobile */}
+        <div className="flex items-center justify-end p-4 lg:hidden">
+          <button onClick={onClose} className="rounded-md p-1 text-gray-500 hover:bg-gray-100">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="flex-1 space-y-1 p-4 pt-0 lg:pt-4">
           {menuItems.map((item) => {
             // Aktif kalau URL dimulai dengan salah satu path menu
             const isActive = item.paths.some((p) =>
@@ -63,6 +85,7 @@ export default function Sidebar() {
               <Link
                 key={item.label}
                 to={item.paths[0]}
+                onClick={onClose} // Tutup sidebar saat menu diklik (di mobile)
                 className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                   isActive
                     ? "bg-emerald-700 text-white shadow-sm"
@@ -104,6 +127,7 @@ export default function Sidebar() {
         <div className="border-t border-gray-100 p-3">
           <Link
             to="/pengaturan"
+            onClick={onClose}
             className="flex items-center gap-2.5 rounded-lg bg-gray-50 p-2.5 transition hover:bg-emerald-50"
           >
             <div className="relative">

@@ -43,14 +43,14 @@ export default function ModalTolakValidasi({ isOpen, onClose, onConfirm, siswa, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+      {/* Backdrop dengan animasi fade-in */}
       <div
-        className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+        className="animate-backdrop absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
         onClick={handleClose}
       ></div>
 
-      {/* Modal */}
-      <div className="relative z-10 max-h-[95vh] w-full max-w-md overflow-y-auto rounded-2xl bg-white shadow-2xl">
+      {/* Modal Container dengan animasi scale-up */}
+      <div className="animate-modal relative z-10 max-h-[95vh] w-full max-w-md overflow-y-auto rounded-2xl bg-white shadow-2xl">
         {/* Header */}
         <div className="flex items-start justify-between border-b border-gray-100 p-5">
           <div className="flex items-start gap-3">
@@ -163,6 +163,18 @@ export default function ModalTolakValidasi({ isOpen, onClose, onConfirm, siswa, 
           </div>
 
           {/* Warning */}
+          <div className="mt-3 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-2.5">
+            <svg xmlns="http://www.w3.org/2000/svg" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+              <line x1="12" x2="12" y1="9" y2="13" />
+              <line x1="12" x2="12.01" y1="17" y2="17" />
+            </svg>
+            <p className="text-[10px] leading-relaxed text-amber-800">
+              Alasan akan dikirimkan ke siswa & wali murid via notifikasi.
+              Siswa perlu <strong>mengambil foto baru</strong> sebelum dapat
+              mengikuti presensi.
+            </p>
+          </div>
         </div>
 
         {/* Footer Actions */}

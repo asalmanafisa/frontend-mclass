@@ -3,76 +3,25 @@ import { Link, useParams } from "react-router-dom";
 import Sidebar from "./dashboard/Sidebar";
 import Topbar from "./dashboard/Topbar";
 
-// ============ 90 NAMA UNIK KELAS 7 ============
+// ============ DATA SISWA ============
 const NAMA_KELAS_7 = [
   "Achmad Shodiq", "Aisyah Nabila", "Alamsyah Putra", "Anisa Rahmawati", "Bagus Setiawan",
   "Dewi Lestari", "Fajar Nugraha", "Hendra Wijaya", "Indah Permatasari", "Joko Purnomo",
-  "Kartika Dewi", "Lukman Hakim", "Maya Sari", "Nanda Pratama", "Oktavia Nur",
-  "Putra Wijaya", "Qonita Sari", "Rahmat Hidayat", "Sinta Amelia", "Taufik Hidayat",
-  "Umi Kalsum", "Vina Anggraini", "Wahyu Saputra", "Yuli Astuti", "Zainal Abidin",
-  "Ahmad Fauzi", "Bella Safitri", "Cahyo Nugroho", "Dinda Ayu", "Eko Prasetyo",
-  "Fitri Handayani", "Galih Pratama", "Hesti Wulandari", "Irfan Maulana", "Jihan Aulia",
-  "Kiki Ramadhan", "Laila Nurjanah", "Muhammad Rizki", "Nabila Putri", "Omar Hidayat",
-  "Puspita Sari", "Qori Amalia", "Ridwan Kamil", "Salsabila Azzahra", "Teguh Santoso",
-  "Ulya Rahmawati", "Vino Bastian", "Winda Lestari", "Yoga Pratama", "Zahra Amelia",
-  "Aditya Nugraha", "Bunga Citra", "Candra Wijaya", "Dian Sastro", "Eka Putri",
-  "Fahri Hamzah", "Gita Savitri", "Hana Alia", "Ilham Akbar", "Jessica Mila",
-  "Kevin Sanjaya", "Laura Basuki", "Maudy Ayunda", "Nicholas Saputra", "Oka Antara",
-  "Prilly Latuconsina", "Raffi Ahmad", "Susi Susanti", "Tora Sudiro", "Ussy Sulistyawati",
-  "Vicky Prasetyo", "Wulan Guritno", "Yuni Shara", "Zaskia Adya", "Ariel Noah",
-  "Baim Wong", "Chelsea Olivia", "Deddy Corbuzier", "Ernest Prakasa", "Fedi Nuril",
-  "Gading Marten", "Hamish Daud", "Iqbaal Ramadhan", "Jefri Nichol", "Kartika Putri",
-  "Lesti Kejora", "Megan Domani", "Nirina Zubir", "Omesh", "Pevita Pearce",
-  "Rizky Febian", "Sandra Dewi", "Tulus", "Ucie Sucita", "Vidi Aldiano",
 ];
 
-// ============ 90 NAMA UNIK KELAS 8 ============
 const NAMA_KELAS_8 = [
   "Abdul Rahman", "Bunga Lestari", "Cinta Laura", "Dimas Anggara", "Erika Putri",
   "Fajar Alfian", "Gina Sari", "Hendra Setiawan", "Ika Nurlia", "Joko Widodo",
-  "Kirana Larasati", "Lina Marlina", "Marsha Aruan", "Naufal Samudra", "Olla Ramlan",
-  "Pandji Pragiwaksono", "Qonita Amira", "Rina Nose", "Sule Sutisna", "Tina Toon",
-  "Ujang Ronaldo", "Vanesha Prescilla", "Wendi Cagur", "Yayan Ruhian", "Zendaya Putri",
-  "Ade Govinda", "Bunga Zainal", "Celine Evangelista", "Dude Harlino", "Enzy Storia",
-  "Fedi Sibil", "Gisella Anastasia", "Herjunot Ali", "Indra Bekti", "Jessica Iskandar",
-  "Komeng", "Luna Maya", "Mpok Alpa", "Narji", "Opick",
-  "Pasha Ungu", "Raffi Farid", "Sulehman", "Tika Panggabean", "Ucok Baba",
-  "Vino G Bastian", "Wulan Sari", "Yudi Alfian", "Zulfikar Ali", "Anang Hermansyah",
-  "Betharia Sonata", "Chrisye", "Didi Kempot", "Ebiet G Ade", "Fatin Shidqia",
-  "Glenn Fredly", "Hendra Cinta", "Iwan Fals", "Judika", "Krisdayanti",
-  "Lesti Andryani", "Maruli Tampubolon", "Nadin Amizah", "Once Mekel", "Padi Band",
-  "Rossa Roslaina", "Sheila On 7", "Tulus Sianipar", "Ungu Band", "Vina Panduwinata",
-  "Wali Band", "Yuni Shara", "Zaskia Gotik", "Ari Lasso", "Bunga Citra Lestari",
-  "Cakra Khan", "Dewa 19", "Elephant Kind", "Fourtwnty", "Gigi Band",
-  "Hindia", "Iwan Fals Junior", "Juicy Luicy", "Kunto Aji", "Letto",
-  "Mocca", "Nadin Amizah II", "OKAAY", "Pamungkas", "Quinn Salman",
 ];
 
-// ============ 90 NAMA UNIK KELAS 9 ============
 const NAMA_KELAS_9 = [
   "Aang Kunaefi", "Bambang Pamungkas", "Cristian Gonzales", "David Beckham", "Egy Maulana",
   "Firman Utina", "Gede Widiade", "Hendra Bayauw", "Irfan Bachdim", "Jack Brown",
-  "Kurniawan Dwi", "Lionel Messi", "Muhammad Ridwan", "Nadeo Argawinata", "Octavianus",
-  "Pratama Arhan", "Ricky Kambuaya", "Stefano Lilipaly", "Taufik Hidayat", "Uston Nawawi",
-  "Victor Igbonefo", "Witan Sulaeman", "Yanto Basna", "Zico Soree", "Andik Vermansah",
-  "Boaz Solossa", "Cristiano Ronaldo", "Diego Maradona", "Evan Dimas", "Fernando Torres",
-  "Gareth Bale", "Hakan Sukur", "Ivan Rakitic", "James Rodriguez", "Kevin De Bruyne",
-  "Luka Modric", "Mohamed Salah", "Neymar Junior", "Ozil Mesut", "Paulo Dybala",
-  "Quaresma", "Ronaldinho", "Sergio Ramos", "Toni Kroos", "Umtiti Samuel",
-  "Virgil van Dijk", "Wayne Rooney", "Xavi Hernandez", "Yaya Toure", "Zinedine Zidane",
-  "Antoine Griezmann", "Bastian Schweinsteiger", "Casemiro", "David Silva", "Eden Hazard",
-  "Fernando Llorente", "Gerard Pique", "Harry Kane", "Iniesta Andres", "Jordi Alba",
-  "Karim Benzema", "Luis Suarez", "Marcelo Vieira", "Nabil Fekir", "Ousmane Dembele",
-  "Paul Pogba", "Quincy Promes", "Roberto Firmino", "Sadio Mane", "Thomas Muller",
-  "Umtiti", "Vinicius Junior", "Wilfried Zaha", "Xherdan Shaqiri", "Yerry Mina",
-  "Zlatan Ibrahimovic", "Angel Di Maria", "Bruno Fernandes", "Coutinho", "Dybala Paulo",
-  "Eriksen Christian", "Firmino Roberto", "Griezmann Antoine", "Higuain Gonzalo", "Isco Alarcon",
-  "Jesus Gabriel", "Kante Ngolo", "Lewandowski", "Messi Lionel", "Neymar Santos",
 ];
 
 // ============ GENERATE SISWA ============
 function generateSiswa(namaList, totalAlfa, prefixNis) {
-  return namaList.slice(0, 10).map((nama, i) => {  // ⬅️ 10, bukan 90
+  return namaList.slice(0, 10).map((nama, i) => {
     const isAlfa = i >= 10 - totalAlfa;
     return {
       no: i + 1,
@@ -95,7 +44,7 @@ const KELAS_DATA = {
     izin: 0,
     alfa: 0,
     terlambat: 0,
-    siswa: generateSiswa(NAMA_KELAS_7.slice(0, 10), 0, "2601"),
+    siswa: generateSiswa(NAMA_KELAS_7, 0, "2601"),
   },
   "8": {
     wali: "Ust. Hasan Basri, M.Pd.",
@@ -105,7 +54,7 @@ const KELAS_DATA = {
     izin: 0,
     alfa: 1,
     terlambat: 0,
-    siswa: generateSiswa(NAMA_KELAS_8.slice(0, 10), 1, "2602"),
+    siswa: generateSiswa(NAMA_KELAS_8, 1, "2602"),
   },
   "9": {
     wali: "Ust. Zainal Abidin, S.Ag.",
@@ -115,7 +64,7 @@ const KELAS_DATA = {
     izin: 0,
     alfa: 2,
     terlambat: 0,
-    siswa: generateSiswa(NAMA_KELAS_9.slice(0, 10), 2, "2603"),
+    siswa: generateSiswa(NAMA_KELAS_9, 2, "2603"),
   },
 };
 
@@ -165,7 +114,7 @@ const statIcons = {
 // ============ SUB COMPONENTS ============
 function StatCard({ item }) {
   return (
-    <div className={`rounded-xl border border-gray-200 bg-white p-4 border-l-4 ${item.borderColor}`}>
+    <div className={`rounded-xl border border-gray-200 bg-white p-4 border-l-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${item.borderColor}`}>
       <div className="flex items-start justify-between">
         <p className="text-[10px] font-bold tracking-wider text-gray-500">
           {item.label}
@@ -253,13 +202,12 @@ export default function DetailKelas() {
 
         <main className="flex-1 overflow-y-auto p-6">
 
-
-          {/* Header */}
-          <div className="mt-3 mb-5 flex items-start justify-between">
+          {/* Header - Animasi Masuk */}
+          <div className="animate-item delay-100 mt-3 mb-5 flex items-start justify-between">
             <div className="flex items-start gap-3">
               <Link
                 to="/rekap-kelas"
-                className="mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                className="mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="m12 19-7-7 7-7M19 12H5" />
@@ -276,8 +224,8 @@ export default function DetailKelas() {
             </div>
           </div>
 
-          {/* Info Wali Kelas */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5">
+          {/* Info Wali Kelas - Animasi Masuk */}
+          <div className="animate-item delay-200 rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:shadow-md">
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-lg font-extrabold text-emerald-700">
                 {currentKelas}
@@ -294,15 +242,15 @@ export default function DetailKelas() {
             </div>
           </div>
 
-          {/* 5 Stat Cards */}
-          <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+          {/* 5 Stat Cards - Animasi Masuk */}
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5 animate-item delay-300 mt-4">
             {statsData.map((s, i) => (
               <StatCard key={i} item={s} />
             ))}
           </div>
 
-          {/* Tabel Siswa */}
-          <div className="mt-4 rounded-xl border border-gray-200 bg-white">
+          {/* Tabel Siswa - Animasi Masuk */}
+          <div className="animate-item delay-400 mt-4 rounded-xl border border-gray-200 bg-white transition-all duration-300 hover:shadow-md">
             <div className="flex items-center justify-between gap-3 border-b border-gray-100 p-4">
               <div className="relative w-full max-w-xs">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -336,23 +284,23 @@ export default function DetailKelas() {
                 <tbody className="divide-y divide-gray-100">
                   {filteredSiswa.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="px-4 py-8 text-center text-xs text-gray-400">
+                      <td colSpan={6} className="px-4 py-8 text-center text-xs text-gray-400">
                         Tidak ada data siswa yang cocok.
                       </td>
                     </tr>
                   ) : (
                     filteredSiswa.map((s) => (
-                      <tr key={s.no} className="text-xs hover:bg-gray-50/50">
+                      <tr key={s.no} className="text-xs hover:bg-gray-50/50 transition-colors">
                         <td className="px-4 py-3 text-center font-medium text-gray-500">{s.no}</td>
                         <td className="px-4 py-3 font-mono text-gray-700">{s.nis}</td>
                         <td className="px-4 py-3 font-semibold text-gray-900">
-  <Link
-    to={`/validasi-wajah/${s.nis}`}
-    className="hover:text-emerald-700 hover:underline"
-  >
-    {s.nama}
-  </Link>
-</td>
+                          <Link
+                            to={`/validasi-wajah/${s.nis}`}
+                            className="hover:text-emerald-700 hover:underline transition-colors"
+                          >
+                            {s.nama}
+                          </Link>
+                        </td>
                         <td className="px-4 py-3 text-center">
                           <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold ${statusStyles[s.status]}`}>
                             {s.status}
@@ -376,9 +324,9 @@ export default function DetailKelas() {
             </div>
           </div>
 
-          <footer className="mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
-        <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
-      </footer>
+          <footer className="animate-item delay-400 mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
+            <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
+          </footer>
         </main>
       </div>
     </div>

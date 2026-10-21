@@ -1,10 +1,29 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import Toast from "./Toast";
 
-export default function ModalGantiFoto({ isOpen, onClose, user }) {
+export default function ModalGantiFoto({ isOpen, onClose, onConfirm, user }) {
   const [preview, setPreview] = useState(null);
   const [zoom, setZoom] = useState(50);
   const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef(null);
+
+  // State Toast
+  const [toast, setToast] = useState({
+    open: false,
+    title: "",
+    message: "",
+    type: "warning",
+  });
+
+  // Reset state ketika modal ditutup
+  useEffect(() => {
+    if (!isOpen) {
+      setPreview(null);
+      setZoom(50);
+      setIsSaving(false);
+      setToast({ ...toast, open: false });
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -21,16 +40,27 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
   };
 
   const handleSave = () => {
+    if (!preview) {
+      setToast({
+        open: true,
+        title: "Foto Belum Dipilih",
+        message: "Silakan pilih foto terlebih dahulu sebelum menyimpan.",
+        type: "warning",
+      });
+      return;
+    }
+
     setIsSaving(true);
     setTimeout(() => {
       setIsSaving(false);
-      onClose();
-      alert("Foto profil berhasil diperbarui!");
+      if (onConfirm) {
+        onConfirm(preview);
+      }
     }, 800);
   };
 
   const handleDelete = () => {
-    if (confirm("Yakin ingin menghapus foto profil saat ini?")) {
+    if (window.confirm("Yakin ingin menghapus foto profil saat ini?")) {
       setPreview(null);
     }
   };
@@ -42,14 +72,14 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+      {/* Backdrop dengan animasi fade-in */}
       <div
-        className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+        className="animate-backdrop absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
         onClick={onClose}
       ></div>
 
-      {/* Modal */}
-      <div className="relative z-10 max-h-[95vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
+      {/* Modal Container dengan animasi scale-up */}
+      <div className="animate-modal relative z-10 max-h-[95vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
         {/* Header */}
         <div className="flex items-start justify-between border-b border-gray-100 p-5">
           <div className="flex items-start gap-3">
@@ -64,7 +94,7 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
                 Perbarui Foto Profil Admin
               </h2>
               <p className="mt-0.5 text-[11px] text-gray-500">
-                {userData.nama} • {userData.idPetugas} • {userData.unit}
+                {userData.nama}{userData.idPetugas}{userData.unit}
               </p>
             </div>
           </div>
@@ -81,13 +111,12 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
 
         {/* Body */}
         <div className="p-5">
-          {/* Grid 2 kolom: Preview + Upload */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* === Preview Box === */}
             <div className="rounded-xl border-2 border-dashed border-emerald-300 bg-emerald-50/30 p-4">
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   VIEWFINDER 1:1
                 </span>
                 <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
@@ -97,12 +126,12 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
 
               {/* Preview image */}
               <div className="mt-3 flex items-center justify-center">
-                <div className="relative h-48 w-48 overflow-hidden rounded-full border-4 border-white shadow-lg">
+                <div className="relative h-48 w-48 overflow-hidden rounded-full border-4 border-white shadow-lg group">
                   {preview ? (
                     <img
                       src={preview}
                       alt="Preview"
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       style={{ transform: `scale(${1 + zoom / 100})` }}
                     />
                   ) : (
@@ -110,11 +139,10 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
                       {userData.avatarSeed}
                     </div>
                   )}
-                  {/* Filename bar */}
                   {preview && (
                     <div className="absolute bottom-0 left-0 right-0 bg-black/70 px-2 py-1">
-                      <p className="truncate text-[9px] font-medium text-white">
-                        Potongan Wajah 1:1 Tengah Lingkaran
+                      <p className="truncate text-center text-[9px] font-medium text-white">
+                        Wajah 1:1 Tengah Lingkaran
                       </p>
                     </div>
                   )}
@@ -146,7 +174,7 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
             </div>
 
             {/* === Upload Box === */}
-            <div className="rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/50 p-4">
+            <div className="rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/50 p-4 transition-colors hover:border-emerald-300">
               <div className="flex flex-col items-center justify-center py-6 text-center">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -171,7 +199,7 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="mt-2 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[10px] font-semibold text-gray-700 hover:bg-gray-50"
+                  className="mt-2 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[10px] font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   Jelajahi File Komputer
                 </button>
@@ -186,7 +214,7 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-[10px] font-semibold text-gray-700 hover:bg-gray-50"
+                  className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-[10px] font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
@@ -197,7 +225,7 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-[10px] font-semibold text-gray-700 hover:bg-gray-50"
+                  className="flex items-center justify-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-[10px] font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
@@ -208,14 +236,15 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
               </div>
             </div>
           </div>
+
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between border-t border-gray-100 bg-gray-50/50 p-4">
+        <div className="flex items-center border-t border-gray-100 bg-gray-50/50 p-4">
           <button
             type="button"
             onClick={handleDelete}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-red-600 transition hover:bg-red-50"
+            className="mr-auto flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-red-600 transition hover:bg-red-50"
           >
           </button>
 
@@ -232,7 +261,7 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
               type="button"
               onClick={handleSave}
               disabled={isSaving}
-              className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-800 disabled:opacity-70"
+              className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-4 py-2 text-xs font-bold text-white transition-all hover:bg-emerald-800 hover:shadow-md active:scale-[0.98] disabled:opacity-70"
             >
               {isSaving ? (
                 <>
@@ -254,6 +283,15 @@ export default function ModalGantiFoto({ isOpen, onClose, user }) {
           </div>
         </div>
       </div>
+
+      {/* TAMPILKAN TOAST DI SINI */}
+      <Toast
+        isOpen={toast.open}
+        onClose={() => setToast({ ...toast, open: false })}
+        title={toast.title}
+        message={toast.message}
+        type={toast.type}
+      />
     </div>
   );
 }

@@ -50,25 +50,6 @@ const classes = [
   { id: "Kelas 9", total: 10, present: 8, izin: 0, telat: 0, alpa: 2, percent: 80, status: "warning" },
 ];
 
-const violations = [
-  {
-    name: "Muhammad Rizky Pratama",
-    detail: "Terlambat 3x",
-    kelas: "8",
-    date: "20 Nov 2026",
-    status: "SP1",
-    statusColor: "bg-red-100 text-red-700",
-  },
-  {
-    name: "Rizqi Fadli Ananda",
-    detail: "Alpa 2x",
-    kelas: "9",
-    date: "19 Nov 2026",
-    status: "Tindak Lanjut",
-    statusColor: "bg-amber-100 text-amber-700",
-  },
-];
-
 // ============ ICON MAP ============
 const statIcons = {
   shield: (
@@ -99,7 +80,7 @@ const statIcons = {
 // ============ SUB COMPONENTS ============
 function StatCard({ item }) {
   return (
-    <div className={`rounded-xl border-l-4 border border-gray-200 bg-white p-4 ${item.borderColor}`}>
+    <div className={`rounded-xl border-l-4 border border-gray-200 bg-white p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${item.borderColor}`}>
       <div className="flex items-start justify-between">
         <div>
           <p className="text-xs font-bold tracking-wide text-gray-600">{item.label}</p>
@@ -124,7 +105,7 @@ function ClassCompactCard({ c }) {
   const isDanger = c.status === "danger";
 
   return (
-    <div className={`rounded-xl border bg-white p-4 ${isDanger ? "border-red-200" : isWarning ? "border-amber-200" : "border-gray-200"}`}>
+    <div className={`rounded-xl border bg-white p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${isDanger ? "border-red-200" : isWarning ? "border-amber-200" : "border-gray-200"}`}>
       <div className="flex items-center justify-between">
         <span className="text-base font-bold text-gray-900">{c.id}</span>
         <span className={`h-2.5 w-2.5 rounded-full ${isDanger ? "bg-red-500" : isWarning ? "bg-amber-500" : "bg-emerald-500"}`}></span>
@@ -173,81 +154,40 @@ function ClassCompactCard({ c }) {
 }
 
 // ============ MAIN ============
-const handleExport = () => {
-  const sheets = classes.map((c) => {
-    const kelasNum = c.id.replace("Kelas ", ""); // "7" | "8" | "9"
-    const siswaKelasIni = getSiswaByKelas(kelasNum);
+export default function RekapKelas() {
+  const handleExport = () => {
+    const sheets = classes.map((c) => {
+      const kelasNum = c.id.replace("Kelas ", "");
+      const siswaKelasIni = getSiswaByKelas(kelasNum);
 
-    // Data siswa dengan nama asli
-    const detailSiswa = siswaKelasIni.map((s, i) => {
-      const isAlfa = i >= c.present; // siswa ke-N+1 dst = alfa
+      const detailSiswa = siswaKelasIni.map((s, i) => {
+        const isAlfa = i >= c.present;
+        return {
+          No: i + 1,
+          NIS: s.nis,
+          "Nama Siswa": s.nama,
+          Status: isAlfa ? "Alfa" : "Hadir",
+          "Waktu Presensi": isAlfa ? "—" : `06:${String(40 + (i % 20)).padStart(2, "0")} WIB`,
+          Keterangan: isAlfa ? "Tanpa Keterangan" : "Tepat Waktu",
+        };
+      });
+
+      detailSiswa.push({});
+      detailSiswa.push({ No: "RINGKASAN", NIS: "", "Nama Siswa": "", Status: "", "Waktu Presensi": "", Keterangan: "" });
+      detailSiswa.push({ No: "Total Siswa", NIS: "", "Nama Siswa": String(c.total), Status: "", "Waktu Presensi": "", Keterangan: "" });
+      detailSiswa.push({ No: "Total Hadir", NIS: "", "Nama Siswa": String(c.present), Status: "", "Waktu Presensi": "", Keterangan: "" });
+      detailSiswa.push({ No: "Total Alpa", NIS: "", "Nama Siswa": String(c.alpa), Status: "", "Waktu Presensi": "", Keterangan: "" });
+      detailSiswa.push({ No: "Persentase Hadir", NIS: "", "Nama Siswa": `${c.percent}%`, Status: "", "Waktu Presensi": "", Keterangan: "" });
+
       return {
-        No: i + 1,
-        NIS: s.nis,
-        "Nama Siswa": s.nama, // ⬅️ NAMA ASLI
-        Status: isAlfa ? "Alfa" : "Hadir",
-        "Waktu Presensi": isAlfa
-          ? "—"
-          : `06:${String(40 + (i % 20)).padStart(2, "0")} WIB`,
-        Keterangan: isAlfa ? "Tanpa Keterangan" : "Tepat Waktu",
+        name: c.id,
+        data: detailSiswa,
       };
     });
 
-    // Baris kosong pemisah
-    detailSiswa.push({});
+    exportMultiSheetExcel(sheets, "Rekap-Presensi-Kelas");
+  };
 
-    // Baris ringkasan
-    detailSiswa.push({
-      No: "RINGKASAN",
-      NIS: "",
-      "Nama Siswa": "",
-      Status: "",
-      "Waktu Presensi": "",
-      Keterangan: "",
-    });
-    detailSiswa.push({
-      No: "Total Siswa",
-      NIS: "",
-      "Nama Siswa": String(c.total),
-      Status: "",
-      "Waktu Presensi": "",
-      Keterangan: "",
-    });
-    detailSiswa.push({
-      No: "Total Hadir",
-      NIS: "",
-      "Nama Siswa": String(c.present),
-      Status: "",
-      "Waktu Presensi": "",
-      Keterangan: "",
-    });
-    detailSiswa.push({
-      No: "Total Alpa",
-      NIS: "",
-      "Nama Siswa": String(c.alpa),
-      Status: "",
-      "Waktu Presensi": "",
-      Keterangan: "",
-    });
-    detailSiswa.push({
-      No: "Persentase Hadir",
-      NIS: "",
-      "Nama Siswa": `${c.percent}%`,
-      Status: "",
-      "Waktu Presensi": "",
-      Keterangan: "",
-    });
-
-    return {
-      name: c.id, // "Kelas 7", "Kelas 8", "Kelas 9"
-      data: detailSiswa,
-    };
-  });
-
-  exportMultiSheetExcel(sheets, "Rekap-Presensi-Kelas");
-};
-
-export default function RekapKelas() {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       <Sidebar />
@@ -256,8 +196,8 @@ export default function RekapKelas() {
         <Topbar />
 
         <main className="flex-1 overflow-y-auto p-6">
-          {/* HEADER */}
-          <div className="mb-5 flex items-start justify-between">
+          {/* HEADER - Animasi Masuk */}
+          <div className="animate-item delay-100 mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div>
               <h2 className="text-xl font-extrabold text-gray-900">
                 Rekapitulasi Presensi & Monitoring Kelas
@@ -282,15 +222,17 @@ export default function RekapKelas() {
             </div>
           </div>
 
-          {/* 4 STAT CARDS */}
+          {/* 4 STAT CARDS - Animasi Masuk */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             {statsData.map((s, i) => (
-              <StatCard key={i} item={s} />
+              <div key={i} className="animate-item delay-200">
+                <StatCard item={s} />
+              </div>
             ))}
           </div>
 
-          {/* MONITORING KELAS */}
-          <section className="mt-6">
+          {/* MONITORING KELAS - Animasi Masuk */}
+          <section className="animate-item delay-300 mt-6">
             <div className="mb-3 flex items-center justify-between">
               <div>
                 <h3 className="text-base font-bold text-gray-900">Detail Monitoring per Tingkat Kelas</h3>
@@ -304,7 +246,8 @@ export default function RekapKelas() {
             </div>
           </section>
 
-          <section className="mt-6">
+          {/* GPS SECTION - Animasi Masuk */}
+          <section className="animate-item delay-400 mt-6">
             <div className="rounded-xl border border-gray-200 bg-white p-5">
               <div className="flex items-start justify-between">
                 <div>
@@ -312,7 +255,7 @@ export default function RekapKelas() {
                   <p className="mt-0.5 text-xs text-gray-500">Pemantauan titik lokasi presensi siswa & petugas.</p>
                 </div>
                 <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   GPS Aktif
                 </span>
               </div>
@@ -353,11 +296,11 @@ export default function RekapKelas() {
             </div>
           </section>
 
-          {/* TABEL REKAP */}
-          <section className="mt-6 rounded-xl border border-gray-200 bg-white">
+          {/* TABEL REKAP - Animasi Masuk */}
+          <section className="animate-item delay-400 mt-6 rounded-xl border border-gray-200 bg-white">
             <div className="flex items-center justify-between border-b border-gray-100 p-5">
               <div>
-                <h3 className="text-base font-bold text-gray-900">Ringkasan Presensi Kelas Per Bulan</h3>
+                <h3 className="text-base font-bold text-gray-900">Ringkasan Presensi per Kelas Hari Ini</h3>
                 <p className="mt-0.5 text-xs text-gray-500">
                   Data diperbarui secara real-time. Terakhir diperbarui 07:30 WIB.
                 </p>
@@ -393,7 +336,7 @@ export default function RekapKelas() {
                         ? "bg-amber-100 text-amber-700"
                         : "bg-red-100 text-red-700";
                     return (
-                      <tr key={i} className="hover:bg-gray-50/50">
+                      <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                         <td className="px-4 py-3 font-bold text-gray-900">{c.id}</td>
                         <td className="px-4 py-3 text-center text-gray-700">{c.total}</td>
                         <td className="px-4 py-3 text-center font-semibold text-emerald-700">{c.present}</td>
@@ -424,9 +367,9 @@ export default function RekapKelas() {
             </div>
           </section>
 
-          <footer className="mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
-        <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
-      </footer>
+          <footer className="animate-item delay-400 mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
+            <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
+          </footer>
         </main>
       </div>
     </div>

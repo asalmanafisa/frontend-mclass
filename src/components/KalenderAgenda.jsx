@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom"; // Tambahkan import Link jika belum ada
 import Sidebar from "./dashboard/Sidebar";
 import Topbar from "./dashboard/Topbar";
-import ModalTerbitkan from "./ModalTerbitkan";
 
 // ============ DATA STATISTIK ============
 const statsData = [
@@ -43,23 +43,6 @@ const statsData = [
   },
 ];
 
-// ============ DATA FORM BUAT PENGUMUMAN ============
-const jenisPengumuman = [
-  { label: "Akademik", value: "akademik" },
-  { label: "Kegiatan", value: "kegiatan" },
-  { label: "Libur / Cuti", value: "libur" },
-  { label: "Penting", value: "penting" },
-  { label: "Prestasi", value: "prestasi" },
-  { label: "Info", value: "info" },
-];
-
-const targetAudiens = [
-  { label: "Semua", value: "semua" },
-  { label: "Siswa", value: "siswa" },
-  { label: "Guru", value: "guru" },
-  { label: "Wali Murid", value: "wali" },
-];
-
 // ============ ICON MAP ============
 const statIcons = {
   calendar: (
@@ -88,7 +71,7 @@ const statIcons = {
 // ============ SUB COMPONENTS ============
 function StatCard({ item }) {
   return (
-    <div className={`rounded-xl border-l-4 border border-gray-200 bg-white p-4 ${item.borderColor}`}>
+    <div className={`rounded-xl border-l-4 border border-gray-200 bg-white p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${item.borderColor}`}>
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-1.5">
@@ -118,8 +101,6 @@ function StatCard({ item }) {
 export default function KalenderAgenda() {
   const [currentMonth] = useState("Oktober 2026");
   const [viewMode, setViewMode] = useState("Bulanan");
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [isPublishing, setIsPublishing] = useState(false);
 
   // Data kalender Oktober 2026 (mulai hari Kamis)
   const daysHeader = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
@@ -141,34 +122,6 @@ export default function KalenderAgenda() {
     30: { type: "amber", label: "Rapat" },
   };
 
-  // Form state
-  const [formData, setFormData] = useState({
-    jenis: "penting",
-    judul: "",
-    tanggal: "2026-10-23",
-    target: "semua",
-    prioritas: "penting",
-    deskripsi: "",
-  });
-
-  // Handler publish
-  const handlePublish = () => {
-    setIsPublishing(true);
-    setTimeout(() => {
-      setIsPublishing(false);
-      setShowConfirmModal(false);
-      setFormData({
-        jenis: "penting",
-        judul: "",
-        tanggal: "2026-10-23",
-        target: "semua",
-        prioritas: "penting",
-        deskripsi: "",
-      });
-      alert("Pengumuman berhasil diterbitkan!");
-    }, 800);
-  };
-
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       <Sidebar />
@@ -177,326 +130,176 @@ export default function KalenderAgenda() {
         <Topbar />
 
         <main className="flex-1 overflow-y-auto p-6">
-          {/* ============ HEADER ============ */}
-          <div className="mb-5 flex items-start justify-between">
+          {/* ============ HEADER - Animasi Masuk ============ */}
+          <div className="animate-item delay-100 mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl font-extrabold text-gray-900">
-                  Kalender & Manajemen Pengumuman Madrasah
-                </h2>
-              </div>
+              <h2 className="text-xl font-extrabold text-gray-900">
+                Kalender & Manajemen Pengumuman Madrasah
+              </h2>
               <p className="mt-1 text-xs text-gray-500">
                 Kelola agenda kegiatan madrasah dan pengumuman yang tersinkronisasi ke seluruh pengguna.
               </p>
             </div>
-            <div className="flex items-center gap-2"></div>
+
+            <Link
+              to="/buat-pengumuman"
+              className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-800 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+              </svg>
+              Buat Pengumuman
+            </Link>
           </div>
 
-          {/* ============ 4 STAT CARDS ============ */}
+          {/* ============ 4 STAT CARDS - Animasi Masuk ============ */}
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             {statsData.map((s, i) => (
-              <StatCard key={i} item={s} />
+              <div key={i} className="animate-item delay-200">
+                <StatCard item={s} />
+              </div>
             ))}
           </div>
 
-          {/* ============ 2-COLUMN LAYOUT (STRETCH) ============ */}
-          <div className="mt-6 grid grid-cols-1 items-stretch gap-4 lg:grid-cols-[1.5fr_1fr]">
-            {/* ==================== LEFT: KALENDER ==================== */}
-            <div className="flex flex-col">
-              <div className="flex flex-1 flex-col rounded-xl border border-gray-200 bg-white p-5">
-                {/* Header Kalender */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-base font-bold text-gray-900">
-                      {currentMonth}
-                    </h3>
-                    <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <rect width="18" height="18" x="3" y="4" rx="2" />
-                        <path d="M16 2v4M8 2v4M3 10h18" />
-                      </svg>
-                      {viewMode}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => setViewMode("Harian")}
-                      className={`rounded-md px-2.5 py-1 text-[10px] font-semibold transition ${
-                        viewMode === "Harian"
-                          ? "bg-emerald-700 text-white"
-                          : "text-gray-600 hover:bg-gray-100"
-                      }`}
-                    >
-                      Harian
-                    </button>
-                    <button
-                      onClick={() => setViewMode("Mingguan")}
-                      className={`rounded-md px-2.5 py-1 text-[10px] font-semibold transition ${
-                        viewMode === "Mingguan"
-                          ? "bg-emerald-700 text-white"
-                          : "text-gray-600 hover:bg-gray-100"
-                      }`}
-                    >
-                      Mingguan
-                    </button>
-                    <button
-                      onClick={() => setViewMode("Bulanan")}
-                      className={`rounded-md px-2.5 py-1 text-[10px] font-semibold transition ${
-                        viewMode === "Bulanan"
-                          ? "bg-emerald-700 text-white"
-                          : "text-gray-600 hover:bg-gray-100"
-                      }`}
-                    >
-                      Bulanan
-                    </button>
-                  </div>
-                </div>
-
-                {/* Day Headers */}
-                <div className="mt-4 grid grid-cols-7 gap-1 text-center">
-                  {daysHeader.map((d) => (
-                    <div key={d} className="py-2 text-[10px] font-bold text-gray-400">
-                      {d}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Calendar Grid */}
-                <div className="flex flex-1 flex-col justify-center">
-                  <div className="grid grid-cols-7 gap-1">
-                    {calendarGrid.map((day, i) => {
-                      if (day === null) return <div key={i} className="min-h-[52px]"></div>;
-
-                      const isToday = day === today;
-                      const event = eventDays[day];
-                      const isWeekend = i % 7 >= 5;
-
-                      return (
-                        <button
-                          key={i}
-                          className={`relative min-h-[52px] rounded-lg border p-1.5 text-left transition hover:shadow-sm ${
-                            isToday
-                              ? "border-emerald-600 bg-emerald-50"
-                              : event
-                              ? "border-gray-200 bg-white hover:bg-gray-50"
-                              : "border-transparent hover:bg-gray-50"
-                          }`}
-                        >
-                          <span
-                            className={`flex h-6 w-6 items-center justify-center rounded text-xs font-bold ${
-                              isToday
-                                ? "bg-emerald-700 text-white"
-                                : isWeekend
-                                ? "text-gray-300"
-                                : "text-gray-700"
-                            }`}
-                          >
-                            {day}
-                          </span>
-                          {event && !isToday && (
-                            <div className="mt-1">
-                              <span
-                                className={`inline-block h-1.5 w-full rounded-full ${
-                                  event.type === "emerald"
-                                    ? "bg-emerald-500"
-                                    : event.type === "amber"
-                                    ? "bg-amber-500"
-                                    : "bg-red-500"
-                                }`}
-                              ></span>
-                              <p className="mt-0.5 truncate text-[8px] font-semibold text-gray-600">
-                                {event.label}
-                              </p>
-                            </div>
-                          )}
-                          {isToday && (
-                            <p className="mt-1 text-[8px] font-bold text-emerald-700">
-                              HARI INI
-                            </p>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Legend */}
-                <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-gray-100 pt-3">
-                  <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-600"></span>
-                    Hari Ini / Agenda Aktif
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
-                    <span className="h-2.5 w-2.5 rounded-full bg-amber-500"></span>
-                    Agenda Penting
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
-                    <span className="h-2.5 w-2.5 rounded-full bg-red-500"></span>
-                    Libur Nasional / Cuti
-                  </div>
-                </div>
+          {/* ============ KALENDER FULL-WIDTH - Animasi Masuk ============ */}
+          <div className="animate-item delay-300 mt-6 flex flex-col rounded-xl border border-gray-200 bg-white p-5">
+            {/* Header Kalender */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-bold text-gray-900">
+                  {currentMonth}
+                </h3>
+                <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect width="18" height="18" x="3" y="4" rx="2" />
+                    <path d="M16 2v4M8 2v4M3 10h18" />
+                  </svg>
+                  {viewMode}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setViewMode("Harian")}
+                  className={`rounded-md px-2.5 py-1 text-[10px] font-semibold transition ${
+                    viewMode === "Harian"
+                      ? "bg-emerald-700 text-white"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  Harian
+                </button>
+                <button
+                  onClick={() => setViewMode("Mingguan")}
+                  className={`rounded-md px-2.5 py-1 text-[10px] font-semibold transition ${
+                    viewMode === "Mingguan"
+                      ? "bg-emerald-700 text-white"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  Mingguan
+                </button>
+                <button
+                  onClick={() => setViewMode("Bulanan")}
+                  className={`rounded-md px-2.5 py-1 text-[10px] font-semibold transition ${
+                    viewMode === "Bulanan"
+                      ? "bg-emerald-700 text-white"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  Bulanan
+                </button>
               </div>
             </div>
 
-            {/* ==================== RIGHT: FORM ==================== */}
-            <div className="flex flex-col">
-              <div className="rounded-xl border border-gray-200 bg-white p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-base font-bold text-gray-900">
-                      Form Buat Pengumuman
-                    </h3>
-                    <p className="mt-0.5 text-xs text-gray-500">
-                      Tulis pengumuman baru untuk dipublikasikan.
-                    </p>
-                  </div>
-                  <span className="rounded-md border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
-                    Draft
-                  </span>
+            {/* Day Headers */}
+            <div className="mt-4 grid grid-cols-7 gap-1 text-center">
+              {daysHeader.map((d) => (
+                <div key={d} className="py-2 text-[10px] font-bold text-gray-400">
+                  {d}
                 </div>
+              ))}
+            </div>
 
-                <form
-                  className="mt-4 space-y-3"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setShowConfirmModal(true);
-                  }}
-                >
-                  {/* Jenis Pengumuman */}
-                  <div>
-                    <label className="mb-1 block text-[11px] font-bold text-gray-700">
-                      Jenis Pengumuman <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      value={formData.jenis}
-                      onChange={(e) => setFormData({ ...formData, jenis: e.target.value })}
-                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs text-gray-800 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    >
-                      {jenisPengumuman.map((j) => (
-                        <option key={j.value} value={j.value}>
-                          {j.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+            {/* Calendar Grid */}
+            <div className="flex flex-1 flex-col justify-center">
+              <div className="grid grid-cols-7 gap-1">
+                {calendarGrid.map((day, i) => {
+                  if (day === null) return <div key={i} className="min-h-[52px]"></div>;
 
-                  {/* Judul */}
-                  <div>
-                    <label className="mb-1 block text-[11px] font-bold text-gray-700">
-                      Judul Pengumuman <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.judul}
-                      onChange={(e) => setFormData({ ...formData, judul: e.target.value })}
-                      placeholder="Contoh: Perubahan Jadwal Ujian PTS Ganjil"
-                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs text-gray-800 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    />
-                  </div>
+                  const isToday = day === today;
+                  const event = eventDays[day];
+                  const isWeekend = i % 7 >= 5;
 
-                  {/* Tanggal */}
-                  <div>
-                    <label className="mb-1 block text-[11px] font-bold text-gray-700">
-                      Tanggal Publikasi <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      value={formData.tanggal}
-                      onChange={(e) => setFormData({ ...formData, tanggal: e.target.value })}
-                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs text-gray-800 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    />
-                  </div>
-
-                  {/* Target Audiens */}
-                  <div>
-                    <label className="mb-1 block text-[11px] font-bold text-gray-700">
-                      Target Audiens <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      value={formData.target}
-                      onChange={(e) => setFormData({ ...formData, target: e.target.value })}
-                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs text-gray-800 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    >
-                      {targetAudiens.map((t) => (
-                        <option key={t.value} value={t.value}>
-                          {t.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Prioritas */}
-                  <div>
-                    <label className="mb-1 block text-[11px] font-bold text-gray-700">
-                      Prioritas <span className="text-red-500">*</span>
-                    </label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {["Rendah", "Normal", "Penting", "Urgent"].map((p) => {
-                        const val = p.toLowerCase();
-                        const active = formData.prioritas === val;
-                        return (
-                          <button
-                            key={p}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, prioritas: val })}
-                            className={`rounded-md border px-2.5 py-1 text-[10px] font-semibold transition ${
-                              active
-                                ? "border-emerald-600 bg-emerald-700 text-white"
-                                : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
-                            }`}
-                          >
-                            {p}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Deskripsi */}
-                  <div>
-                    <label className="mb-1 block text-[11px] font-bold text-gray-700">
-                      Deskripsi Pengumuman <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={formData.deskripsi}
-                      onChange={(e) => setFormData({ ...formData, deskripsi: e.target.value })}
-                      placeholder="Tuliskan isi pengumuman secara lengkap dan jelas..."
-                      className="w-full resize-none rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs text-gray-800 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    ></textarea>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-2 pt-1">
+                  return (
                     <button
-                      type="submit"
-                      className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-emerald-700 py-2 text-xs font-bold text-white hover:bg-emerald-800"
+                      key={i}
+                      className={`relative min-h-[52px] rounded-lg border p-1.5 text-left transition-all duration-200 hover:shadow-sm hover:-translate-y-0.5 ${
+                        isToday
+                          ? "border-emerald-600 bg-emerald-50"
+                          : event
+                          ? "border-gray-200 bg-white hover:bg-gray-50"
+                          : "border-transparent hover:bg-gray-50"
+                      }`}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="m22 2-7 20-4-9-9-4Z" />
-                        <path d="M22 2 11 13" />
-                      </svg>
-                      Terbitkan Pengumuman
+                      <span
+                        className={`flex h-6 w-6 items-center justify-center rounded text-xs font-bold ${
+                          isToday
+                            ? "bg-emerald-700 text-white"
+                            : isWeekend
+                            ? "text-gray-300"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        {day}
+                      </span>
+                      {event && !isToday && (
+                        <div className="mt-1">
+                          <span
+                            className={`inline-block h-1.5 w-full rounded-full ${
+                              event.type === "emerald"
+                                ? "bg-emerald-500"
+                                : event.type === "amber"
+                                ? "bg-amber-500"
+                                : "bg-red-500"
+                            }`}
+                          ></span>
+                          <p className="mt-0.5 truncate text-[8px] font-semibold text-gray-600">
+                            {event.label}
+                          </p>
+                        </div>
+                      )}
+                      {isToday && (
+                        <p className="mt-1 text-[8px] font-bold text-emerald-700">
+                          HARI INI
+                        </p>
+                      )}
                     </button>
-                  </div>
-                </form>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Legend */}
+            <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-gray-100 pt-3">
+              <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-600"></span>
+                Hari Ini / Agenda Aktif
+              </div>
+              <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-500"></span>
+                Agenda Penting
+              </div>
+              <div className="flex items-center gap-1.5 text-[10px] text-gray-600">
+                <span className="h-2.5 w-2.5 rounded-full bg-red-500"></span>
+                Libur Nasional / Cuti
               </div>
             </div>
           </div>
 
-          {/* ============ MODAL KONFIRMASI ============ */}
-          <ModalTerbitkan
-            isOpen={showConfirmModal}
-            onClose={() => setShowConfirmModal(false)}
-            onConfirm={handlePublish}
-            data={formData}
-            isLoading={isPublishing}
-          />
-
-          {/* Footer */}
-          <footer className="mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
-        <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
-      </footer>
+          {/* Footer - Animasi Masuk */}
+          <footer className="animate-item delay-400 mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
+            <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
+          </footer>
         </main>
       </div>
     </div>

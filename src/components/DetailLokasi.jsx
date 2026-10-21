@@ -4,39 +4,6 @@ import Topbar from "./dashboard/Topbar";
 
 // ============ DATA TITIK LOKASI ============
 const lokasiData = [
-  {
-    id: 1,
-    nama: "Kampus Utama MTs Al-Ma'arif 02",
-    alamat: "Singosari, Kabupaten Malang, Jawa Timur",
-    lat: -7.8898,
-    lng: 112.6632,
-    radius: 50,
-    siswaTerpantau: 30,
-    siswaDiLuar: 1,
-    status: "aktif",
-  },
-  {
-    id: 2,
-    nama: "Gedung Kelas 7 & 8",
-    alamat: "Kompleks MTs Al-Ma'arif 02 Singosari",
-    lat: -7.8902,
-    lng: 112.6635,
-    radius: 30,
-    siswaTerpantau: 20,
-    siswaDiLuar: 0,
-    status: "aktif",
-  },
-  {
-    id: 3,
-    nama: "Gedung Kelas 9 & Lab",
-    alamat: "Kompleks MTs Al-Ma'arif 02 Singosari",
-    lat: -7.8895,
-    lng: 112.6630,
-    radius: 30,
-    siswaTerpantau: 10,
-    siswaDiLuar: 1,
-    status: "warning",
-  },
 ];
 
 // ============ SISWA DI LUAR RADIUS ============
@@ -109,14 +76,13 @@ export default function DetailLokasi() {
         <Topbar />
 
         <main className="flex-1 overflow-y-auto p-6">
-          
 
-          {/* Header */}
-          <div className="mt-3 mb-5 flex items-start justify-between">
+          {/* Header - Animasi Masuk */}
+          <div className="animate-item delay-100 mt-3 mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-start gap-3">
               <Link
                 to="/rekap-kelas"
-                className="mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                className="mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="m12 19-7-7 7-7M19 12H5" />
@@ -131,13 +97,20 @@ export default function DetailLokasi() {
                 </p>
               </div>
             </div>
+            <a
+              href={MAP_LINK_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-800 transition-colors"
+            >
+              {icons.external}
+              Buka di Google Maps
+            </a>
           </div>
 
-          {/* 2 STAT CARDS */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            
-
-            <div className="rounded-xl border border-gray-200 bg-white p-4 border-l-4 border-l-blue-500">
+          {/* 2 STAT CARDS - Animasi Masuk */}
+          <div className="animate-item delay-200 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-gray-200 bg-white p-4 border-l-4 border-l-blue-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-xs font-bold tracking-wide text-gray-600">
@@ -155,7 +128,7 @@ export default function DetailLokasi() {
               </div>
             </div>
 
-            <div className="rounded-xl border border-gray-200 bg-white p-4 border-l-4 border-l-red-500">
+            <div className="rounded-xl border border-gray-200 bg-white p-4 border-l-4 border-l-red-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-xs font-bold tracking-wide text-gray-600">
@@ -174,9 +147,9 @@ export default function DetailLokasi() {
             </div>
           </div>
 
-          {/* === PETA FULL WIDTH === */}
-          <div className="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white">
-            <div className="flex items-center justify-between border-b border-gray-100 p-4">
+          {/* PETA FULL WIDTH - Animasi Masuk */}
+          <div className="animate-item delay-300 mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-300 hover:shadow-md">
+            <div className="flex flex-col items-start justify-between gap-3 border-b border-gray-100 p-4 sm:flex-row sm:items-center">
               <div>
                 <h3 className="text-sm font-bold text-gray-900">
                   Peta Geofence Presensi
@@ -200,7 +173,7 @@ export default function DetailLokasi() {
               </div>
             </div>
 
-            {/* Google Maps iframe — full width & tinggi */}
+            {/* Google Maps iframe */}
             <div className="relative h-[500px] w-full bg-gray-100">
               <iframe
                 title="Peta MTs Al-Ma'arif 02 Singosari"
@@ -231,10 +204,59 @@ export default function DetailLokasi() {
             </div>
           </div>
 
-          
-          {/* SISWA DI LUAR RADIUS */}
-          <section className="mt-4 rounded-xl border border-gray-200 bg-white">
-            <div className="flex items-center justify-between border-b border-gray-100 p-5">
+            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+              {lokasiData.map((l) => (
+                <div
+                  key={l.id}
+                  className={`rounded-lg border p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-sm ${
+                    l.status === "aktif"
+                      ? "border-emerald-100 bg-emerald-50/40"
+                      : "border-amber-100 bg-amber-50/40"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold text-gray-900">{l.nama}</p>
+                      <p className="mt-0.5 text-[10px] text-gray-500">{l.alamat}</p>
+                    </div>
+                    <span
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                        l.status === "aktif"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : "bg-amber-100 text-amber-700"
+                      }`}
+                    >
+                      {l.status === "aktif" ? "AKTIF" : "PERLU CEK"}
+                    </span>
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-3 gap-1.5 text-center">
+                    <div className="rounded bg-white py-1.5">
+                      <p className="text-[9px] text-gray-500">Radius</p>
+                      <p className="text-xs font-bold text-gray-800">{l.radius}m</p>
+                    </div>
+                    <div className="rounded bg-white py-1.5">
+                      <p className="text-[9px] text-gray-500">Terpantau</p>
+                      <p className="text-xs font-bold text-gray-800">{l.siswaTerpantau}</p>
+                    </div>
+                    <div className="rounded bg-white py-1.5">
+                      <p className="text-[9px] text-gray-500">Luar</p>
+                      <p
+                        className={`text-xs font-bold ${
+                          l.siswaDiLuar > 0 ? "text-red-600" : "text-gray-800"
+                        }`}
+                      >
+                        {l.siswaDiLuar}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          {/* TABEL SISWA DI LUAR RADIUS - Animasi Masuk */}
+          <section className="animate-item delay-400 mt-4 rounded-xl border border-gray-200 bg-white transition-all duration-300 hover:shadow-md">
+            <div className="flex flex-col items-start justify-between gap-3 border-b border-gray-100 p-5 sm:flex-row sm:items-center">
               <div className="flex items-start gap-2">
                 <span className="mt-0.5 text-red-500">{icons.warning}</span>
                 <div>
@@ -264,7 +286,7 @@ export default function DetailLokasi() {
                 </thead>
                 <tbody className="divide-y divide-gray-100 text-xs">
                   {siswaDiLuarRadius.map((s, i) => (
-                    <tr key={i} className="hover:bg-gray-50/50">
+                    <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                       <td className="px-4 py-3 font-semibold text-gray-900">
                         {s.nama}
                       </td>
@@ -287,8 +309,8 @@ export default function DetailLokasi() {
             </div>
           </section>
 
-          {/* Footer */}
-          <footer className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4 text-[10px] text-gray-400">
+          {/* Footer - Animasi Masuk */}
+          <footer className="animate-item delay-400 mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
             <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
           </footer>
         </main>
