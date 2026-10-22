@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -34,25 +36,21 @@ export default function LoginForm() {
     setError(null);
 
     try {
-      await new Promise((r) => setTimeout(r, 800));
-
-      if (formData.password !== "password123") {
-        setError({
-          title: "Login gagal! Kata sandi salah.",
-          field: "password",
-          message: "Kata sandi yang Anda masukkan salah. Silakan coba lagi.",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      navigate("/dashboard");
+      await login(formData.email.trim(), formData.password, formData.remember);
+      navigate("/dashboard", { replace: true });
     } catch (err) {
-      setError({
-        title: "Terjadi kesalahan pada server.",
-        field: null,
-        message: "Silakan coba beberapa saat lagi.",
-      });
+      if (err.status === 401) {
+        setError({
+          title: "Login gagal! Email atau kata sandi salah.",
+          field: "password",
+          message: "Periksa kembali email dan kata sandi Anda.",
+        });
+      } else if (err.status === 403) {
+        setError({ title: "Akses ditolak.", field: null, message: err.message });
+      } else {
+        setError({ title: "Gagal masuk.", field: null, message: err.message });
+      }
+    } finally {
       setIsLoading(false);
     }
   };

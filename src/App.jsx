@@ -13,6 +13,8 @@ import DetailKelas from "./components/DetailKelas";
 import DetailLokasi from "./components/DetailLokasi";
 import ValidasiWajah from "./components/ValidasiWajah";
 import BuatPengumuman from "./components/BuatPengumuman";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 function AuthLayout({ children }) {
   return (
@@ -38,24 +40,28 @@ function AuthLayout({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Auth Routes */}
-        <Route path="/" element={<AuthLayout><LoginForm /></AuthLayout>} />
-        <Route path="/login" element={<AuthLayout><LoginForm /></AuthLayout>} />
-        <Route path="/register" element={<AuthLayout><RegistrationForm /></AuthLayout>} />
-        <Route path="/forgot-password" element={<AuthLayout><ForgotPasswordForm /></AuthLayout>} />
+      <AuthProvider>
+        <Routes>
+          {/* Auth Routes */}
+          <Route path="/" element={<AuthLayout><LoginForm /></AuthLayout>} />
+          <Route path="/login" element={<AuthLayout><LoginForm /></AuthLayout>} />
+          <Route path="/register" element={<AuthLayout><RegistrationForm /></AuthLayout>} />
+          <Route path="/forgot-password" element={<AuthLayout><ForgotPasswordForm /></AuthLayout>} />
 
-        {/* Dashboard & Main Routes */}
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/rekap-kelas" element={<RekapKelas />} />
-        <Route path="/detail-kelas/:kelas" element={<DetailKelas />} />
-        <Route path="/detail-lokasi" element={<DetailLokasi />} />
-        <Route path="/semua-kelas" element={<SemuaKelas />} />
-        <Route path="/kalender" element={<KalenderAgenda />} />
-        <Route path="/pengaturan" element={<Pengaturan />} />
-        <Route path="/validasi-wajah/:nis" element={<ValidasiWajah />} />
-        <Route path="/buat-pengumuman" element={<BuatPengumuman />} />
-      </Routes>
+          {/* Dashboard & Main Routes */}
+          <Route element={<ProtectedRoute roles={["admin", "teacher"]} />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/rekap-kelas" element={<RekapKelas />} />
+            <Route path="/detail-kelas/:kelas" element={<DetailKelas />} />
+            <Route path="/detail-lokasi" element={<DetailLokasi />} />
+            <Route path="/semua-kelas" element={<SemuaKelas />} />
+            <Route path="/kalender" element={<KalenderAgenda />} />
+            <Route path="/pengaturan" element={<Pengaturan />} />
+            <Route path="/validasi-wajah/:nis" element={<ValidasiWajah />} />
+            <Route path="/buat-pengumuman" element={<BuatPengumuman />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

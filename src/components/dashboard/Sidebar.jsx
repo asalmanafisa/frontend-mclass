@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LogoutModal from "../LogoutModal";
+import { useAuth } from "../../context/AuthContext";
 
 const menuItems = [
   { label: "Dashboard Utama", icon: "grid", paths: ["/dashboard"], badge: null },
@@ -47,6 +48,7 @@ const icons = {
 export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [showLogout, setShowLogout] = useState(false);
 
   return (
@@ -132,13 +134,13 @@ export default function Sidebar({ isOpen, onClose }) {
           >
             <div className="relative">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white">
-                AF
+                {(user?.name ?? user?.email ?? "U").slice(0, 2).toUpperCase()}
               </div>
               <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-emerald-500"></span>
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-bold text-gray-900">
-                Ust. H. Ahmad Fauzi, S.Pd
+                {user?.name ?? user?.email ?? "Pengguna"}
               </p>
               <p className="truncate text-[10px] text-emerald-600">
                 Online • Petugas Presensi
@@ -152,9 +154,10 @@ export default function Sidebar({ isOpen, onClose }) {
       <LogoutModal
         isOpen={showLogout}
         onClose={() => setShowLogout(false)}
-        onConfirm={() => {
+        onConfirm={async () => {
+          await logout();
           setShowLogout(false);
-          navigate("/login");
+          navigate("/login", { replace: true });
         }}
       />
     </>

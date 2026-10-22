@@ -6,12 +6,13 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
 
   if (!isOpen) return null;
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setIsLoggingOut(true);
-    setTimeout(() => {
+    try {
+      await onConfirm?.();
+    } finally {
       setIsLoggingOut(false);
-      if (onConfirm) onConfirm();
-    }, 800);
+    }
   };
 
   return (
