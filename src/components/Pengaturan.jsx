@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./dashboard/Sidebar";
 import Topbar from "./dashboard/Topbar";
 import ModalGantiFoto from "./ModalGantiFoto";
 import ModalHapusFoto from "./ModalHapusFoto";
 import Toast from "./Toast";
+import { useAuth } from "../context/AuthContext";
+
+function toProfile(user) {
+  return {
+    nama: user?.name ?? user?.nama ?? "",
+    email: user?.email ?? "",
+    role: user?.role ?? "",
+  };
+}
 
 export default function Pengaturan() {
-  const [profile, setProfile] = useState({
-    nama: "Ust. H. Ahmad Fauzi, S.Pd",
-    email: "ahmad.fauzi@mtsalmaarif.sch.id",
-    role: "Guru / Petugas Presensi Harian",
-  });
+  const { user, refreshUser, updateProfile } = useAuth();
+  const [profile, setProfile] = useState(() => toProfile(user));
 
   const [fotoProfil, setFotoProfil] = useState(null);
 
@@ -18,6 +24,8 @@ export default function Pengaturan() {
   const [showHapusModal, setShowHapusModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const [toast, setToast] = useState({
     open: false,
@@ -25,6 +33,32 @@ export default function Pengaturan() {
     message: "",
     type: "success",
   });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    refreshUser()
+      .then((currentUser) => {
+        if (isMounted) setProfile(toProfile(currentUser));
+      })
+      .catch((error) => {
+        if (isMounted) {
+          setToast({
+            open: true,
+            title: "Gagal memuat profil",
+            message: error.message,
+            type: "error",
+          });
+        }
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingProfile(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [refreshUser]);
 
   const handleSimpanFoto = (newFotoUrl) => {
     setFotoProfil(newFotoUrl);
@@ -52,17 +86,46 @@ export default function Pengaturan() {
     }, 800);
   };
 
-  const handleSimpanPerubahan = () => {
+  const handleSimpanPerubahan = async () => {
     setIsSavingProfile(true);
-    setTimeout(() => {
-      setIsSavingProfile(false);
+    setFieldErrors({});
+
+    try {
+      const updatedUser = await updateProfile({
+        name: profile.nama,
+        email: profile.email,
+      });
+      setProfile(toProfile(updatedUser));
       setToast({
         open: true,
         title: "Perubahan Berhasil Disimpan",
         message: "Data profil dan pengaturan akun Anda telah diperbarui.",
         type: "success",
       });
-    }, 800);
+    } catch (error) {
+      if (error.status === 400 && error.errors && typeof error.errors === "object") {
+        setFieldErrors(error.errors);
+      }
+      setToast({
+        open: true,
+        title: "Gagal menyimpan perubahan",
+        message: error.message,
+        type: "error",
+      });
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
+  const handleProfileChange = (field, value) => {
+    setProfile((currentProfile) => ({ ...currentProfile, [field]: value }));
+    setFieldErrors((currentErrors) => ({ ...currentErrors, [field]: undefined }));
+  };
+
+  const getFieldError = (field) => {
+    const error = fieldErrors[field];
+    const message = Array.isArray(error) ? error[0] : error;
+    return typeof message === "string" ? message : null;
   };
 
   return (
@@ -264,11 +327,24 @@ export default function Pengaturan() {
                       NAMA LENGKAP & GELAR <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="profile-name"
                       type="text"
                       value={profile.nama}
-                      onChange={(e) => setProfile({ ...profile, nama: e.target.value })}
-                      className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-xs text-gray-800 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+                      onChange={(e) => handleProfileChange("name", e.target.value)}
+                      aria-invalid={Boolean(getFieldError("name"))}
+                      aria-describedby={getFieldError("name") ? "profile-name-error" : undefined}
+                      disabled={isLoadingProfile || isSavingProfile}
+                      className={`w-full rounded-lg border bg-gray-50 px-3 py-2 text-xs text-gray-800 focus:bg-white focus:outline-none focus:ring-1 transition-colors disabled:cursor-not-allowed disabled:opacity-70 ${
+                        getFieldError("name")
+                          ? "border-red-400 focus:border-red-500 focus:ring-red-500"
+                          : "border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                      }`}
                     />
+                    {getFieldError("name") && (
+                      <p id="profile-name-error" role="alert" className="mt-1 text-[10px] text-red-600">
+                        {getFieldError("name")}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -283,19 +359,33 @@ export default function Pengaturan() {
                         </svg>
                       </span>
                       <input
+                        id="profile-email"
                         type="email"
                         value={profile.email}
-                        onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pl-9 pr-3 text-xs text-gray-800 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+                        onChange={(e) => handleProfileChange("email", e.target.value)}
+                        aria-invalid={Boolean(getFieldError("email"))}
+                        aria-describedby={getFieldError("email") ? "profile-email-error" : undefined}
+                        disabled={isLoadingProfile || isSavingProfile}
+                        className={`w-full rounded-lg border bg-gray-50 py-2 pl-9 pr-3 text-xs text-gray-800 focus:bg-white focus:outline-none focus:ring-1 transition-colors disabled:cursor-not-allowed disabled:opacity-70 ${
+                          getFieldError("email")
+                            ? "border-red-400 focus:border-red-500 focus:ring-red-500"
+                            : "border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                        }`}
                       />
                     </div>
-                    <p className="mt-1 flex items-center gap-1 text-[10px] text-gray-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 16v-4M12 8h.01" />
-                      </svg>
-                      Digunakan untuk notifikasi resmi & verifikasi akun petugas.
-                    </p>
+                    {getFieldError("email") ? (
+                      <p id="profile-email-error" role="alert" className="mt-1 text-[10px] text-red-600">
+                        {getFieldError("email")}
+                      </p>
+                    ) : (
+                      <p className="mt-1 flex items-center gap-1 text-[10px] text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M12 16v-4M12 8h.01" />
+                        </svg>
+                        Digunakan untuk notifikasi resmi & verifikasi akun petugas.
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -390,10 +480,10 @@ export default function Pengaturan() {
                   </button>
                   <button
                     onClick={handleSimpanPerubahan}
-                    disabled={isSavingProfile}
+                    disabled={isLoadingProfile || isSavingProfile}
                     className="flex items-center gap-1.5 rounded-lg bg-emerald-700 px-4 py-2 text-xs font-bold text-white transition-all hover:bg-emerald-800 hover:shadow-md active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    {isSavingProfile ? "Menyimpan..." : "Simpan perubahan"}
+                    {isLoadingProfile ? "Memuat profil..." : isSavingProfile ? "Menyimpan..." : "Simpan perubahan"}
                   </button>
                 </div>
               </div>

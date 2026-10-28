@@ -15,6 +15,10 @@ export const tokenStore = {
     store.setItem(TOKEN_KEY, token);
     store.setItem(USER_KEY, JSON.stringify(user));
   },
+  updateUser(user) {
+    const store = localStorage.getItem(TOKEN_KEY) ? localStorage : sessionStorage;
+    store.setItem(USER_KEY, JSON.stringify(user));
+  },
   clear() {
     for (const s of [localStorage, sessionStorage]) {
       s.removeItem(TOKEN_KEY);
@@ -24,9 +28,10 @@ export const tokenStore = {
 };
 
 export class ApiError extends Error {
-  constructor(status, message) {
+  constructor(status, message, errors = null) {
     super(message);
     this.status = status;
+    this.errors = errors;
   }
 }
 
@@ -54,7 +59,11 @@ export async function api(path, { method = "GET", body, auth = true } = {}) {
       tokenStore.clear();
       window.location.assign("/login");
     }
-    throw new ApiError(res.status, data?.message ?? "Terjadi kesalahan.");
+    throw new ApiError(
+      res.status,
+      data?.message ?? "Terjadi kesalahan.",
+      data?.errors ?? null,
+    );
   }
   return data;
 }
