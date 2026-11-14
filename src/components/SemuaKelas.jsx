@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import Sidebar from "./dashboard/Sidebar";
-import Topbar from "./dashboard/Topbar";
+import DashboardLayout from "./dashboard/DashboardLayout";
 
 // Data 9 kelas dengan berbagai status
 const allClasses = [
@@ -44,13 +43,22 @@ export default function AllClasses() {
   const grades = [7, 8, 9];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar />
-
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Topbar />
-
-        <main className="flex-1 overflow-y-auto p-6">
+    <DashboardLayout
+      footerContent={
+        <div className="flex w-full flex-col items-center justify-between gap-2 sm:flex-row">
+          <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
+          <div className="flex items-center gap-4">
+            <a href="#" className="hover:text-gray-600">Bantuan Teknis</a>
+            <a href="#" className="hover:text-gray-600">Kebijakan Privasi</a>
+            <div className="flex items-center gap-1.5 text-emerald-600">
+              <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+              <span className="font-medium">Server Terhubung</span>
+            </div>
+          </div>
+        </div>
+      }
+    >
+        <main className="min-w-0 flex-1 p-6">
          {/* Breadcrumb */}
 <div className="flex items-center gap-2 text-xs text-gray-500">
   <Link to="/dashboard" className="hover:text-emerald-700">Dashboard</Link>
@@ -200,20 +208,7 @@ export default function AllClasses() {
             );
           })}
 
-          {/* Footer */}
-          <footer className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4 text-[10px] text-gray-400">
-            <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
-            <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-gray-600">Bantuan Teknis</a>
-              <a href="#" className="hover:text-gray-600">Kebijakan Privasi</a>
-              <div className="flex items-center gap-1.5 text-emerald-600">
-                <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                <span className="font-medium">Server Terhubung</span>
-              </div>
-            </div>
-          </footer>
         </main>
-      </div>
-    </div>
+    </DashboardLayout>
   );
 }

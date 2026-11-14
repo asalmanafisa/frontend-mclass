@@ -62,14 +62,14 @@ export default function Sidebar({ isOpen, onClose }) {
       {/* Backdrop (Hanya muncul di mobile saat sidebar terbuka) */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-gray-900/50 lg:hidden"
+          className="fixed inset-x-0 bottom-0 top-16 z-40 bg-gray-900/50 lg:hidden"
           onClick={onClose}
         ></div>
       )}
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-60 shrink-0 flex-col border-r border-gray-200 bg-white transition-transform duration-300 lg:static lg:translate-x-0 ${
+        className={`fixed bottom-0 left-0 top-16 z-50 flex w-60 shrink-0 flex-col border-r border-gray-200 bg-white transition-transform duration-300 lg:sticky lg:bottom-auto lg:top-0 lg:h-[calc(100vh-4rem)] lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

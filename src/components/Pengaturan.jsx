@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import Sidebar from "./dashboard/Sidebar";
-import Topbar from "./dashboard/Topbar";
+import DashboardLayout from "./dashboard/DashboardLayout";
 import ModalGantiFoto from "./ModalGantiFoto";
 import ModalHapusFoto from "./ModalHapusFoto";
 import Toast from "./Toast";
@@ -129,13 +128,8 @@ export default function Pengaturan() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar />
-
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Topbar />
-
-        <main className="flex-1 overflow-y-auto p-6">
+    <DashboardLayout>
+        <main className="min-w-0 flex-1 p-6">
 
           {/* BANNER HIJAU */}
           <div className="animate-item delay-100 relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-800 to-emerald-600 p-6 text-white transition-all duration-300 hover:shadow-lg">
@@ -515,11 +509,7 @@ export default function Pengaturan() {
           />
 
           {/* Footer */}
-          <footer className="animate-item delay-400 mt-6 flex items-center justify-center border-t border-gray-200 pt-4 text-[10px] text-gray-400">
-            <span>© 2026 MTs Al-Ma'arif O2 Singosari • Sistem Presensi Digital Terpadu</span>
-          </footer>
         </main>
-      </div>
-    </div>
+    </DashboardLayout>
   );
 }

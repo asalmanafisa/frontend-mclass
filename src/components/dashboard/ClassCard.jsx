@@ -51,13 +51,13 @@ export default function ClassCard({
       </div>
 
       {/* Badge note */}
-      {note && (
-        <div className="mt-3">
+      <div className="mt-3 flex h-5 items-center" aria-hidden={!note}>
+        {note && (
           <span className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
             {note}
           </span>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* ⬇️ Tombol Link ke Detail Kelas */}
       <Link
